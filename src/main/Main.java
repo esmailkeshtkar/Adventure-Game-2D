@@ -9,7 +9,15 @@ public class Main {
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setResizable(false);
 		window.setTitle("2D Adventure");
+		
+		GamePanel gamePanel = new GamePanel();
+		window.add(gamePanel);
+		
+		window.pack();
+		
 		window.setLocationRelativeTo(null); //sets window to center of the screen
 		window.setVisible(true);
+		
+		gamePanel.startGameThread();
 	}
 }
