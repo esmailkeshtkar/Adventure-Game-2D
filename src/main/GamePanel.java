@@ -15,13 +15,19 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	//Screen settings
 	final int originalTileSize = 16; //16x16 tile standard for retro games
-	final int scale = 3; //scaling the size according to monitor screen sizes
+	final int scale = 5; //scaling the size according to monitor screen sizes
 	public final int tileSize = originalTileSize * scale; //48x48 tile size 
 	//4:3 ratio 16 tiles horizontally and 12 vertically
 	public final int maxScreenCol = 16;
 	public final int maxScreenRow = 12;
 	public final int screenWidth = tileSize * maxScreenCol; //1024 pixels
 	public final int screenHeight = tileSize * maxScreenRow; //768 pixels
+	
+	//WORLD SETTINGS
+	public final int maxWorldCol = 50;
+	public final int maxWorldRow = 50;
+	public final int worldWidth = tileSize * maxWorldCol;
+	public final int worldHeight  = tileSize * maxWorldRow;
 	
 	//FPS, the number of frames to be drawn per second
 	int FPS = 60;
@@ -30,7 +36,7 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	KeyHandler keyH = new KeyHandler();
 	Thread gameThread;
-	Player player = new Player(this, keyH);
+	public Player player = new Player(this, keyH);
 	
 	public GamePanel() {
 		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
