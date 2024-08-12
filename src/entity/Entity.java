@@ -11,10 +11,11 @@ public class Entity {
 	//an image with an accessible buffer of image data, stores image files
 	public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2; 
 	public String direction;
-	
 	public int spriteCounter = 0;
 	public int spriteNum = 1;
 	public Rectangle collisionArea;
+	public int collisionAreaDefaultX, collisionAreaDefaultY;
 	public boolean collisionOn = false;
+
 	
 }

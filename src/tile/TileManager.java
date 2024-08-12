@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 
 import main.GamePanel;
 
+//manages tile placements on the world
 public class TileManager {
 
 	GamePanel gp;

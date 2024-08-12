@@ -11,6 +11,7 @@ import javax.imageio.ImageIO;
 import main.GamePanel;
 import main.KeyHandler;
 
+//manages the player entity
 public class Player extends Entity{
 	
 	GamePanel gp;
@@ -19,6 +20,7 @@ public class Player extends Entity{
 	//indicate where the player is drawn on the screen
 	public final int screenX; 
 	public final int screenY;
+	int numKey = 0;
 	
 	public Player(GamePanel gp, KeyHandler keyH) {
 		
@@ -33,8 +35,11 @@ public class Player extends Entity{
 		collisionArea = new Rectangle();
 		collisionArea.x = gp.scale*2;//starting x
 		collisionArea.y = gp.scale*4;//starting y
+		collisionAreaDefaultX = collisionArea.x;
+		collisionAreaDefaultY = collisionArea.y;
 		collisionArea.width = gp.tileSize - (gp.scale-2)*gp.originalTileSize;//width of collision area
 		collisionArea.height = gp.tileSize - (gp.scale-2)*gp.originalTileSize;//height of collision area
+		
 		
 		setDefaultValues();
 		getPlayerImage();
@@ -90,7 +95,11 @@ public class Player extends Entity{
 			collisionOn = false;
 			gp.cDetector.checkTile(this);
 			
-			//if collision is false, the player can move
+			//Check object collision
+			int objIndex = gp.cDetector.checkObject(this, true);
+			pickUpObject(objIndex);
+			
+			//if tile collision is false, the player can move
 			if(collisionOn == false) {
 				switch(direction) {
 				case "up": worldY -= speed; break;
@@ -114,6 +123,28 @@ public class Player extends Entity{
 			}
 		}
 		
+	}
+	
+	public void pickUpObject(int i) {
+		
+		if(i != 999) {
+			String objectName = gp.obj[i].name;
+			
+			switch(objectName) {
+			case "Key": //picks up a key
+				numKey++;
+				gp.obj[i] = null;
+				System.out.println("Key: "+numKey);
+				break;
+			case "Door": //opens door if player has a key
+				if(numKey > 0) {
+					gp.obj[i] = null;
+					numKey--;
+				}
+				System.out.println("Key: "+numKey);
+				break;
+			}
+		}
 	}
 	
 	public void draw(Graphics2D g2) {
