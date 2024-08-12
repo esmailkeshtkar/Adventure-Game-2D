@@ -20,7 +20,7 @@ public class Player extends Entity{
 	//indicate where the player is drawn on the screen
 	public final int screenX; 
 	public final int screenY;
-	int numKey = 0;
+	public int numKey = 0;
 	
 	public Player(GamePanel gp, KeyHandler keyH) {
 		
@@ -40,7 +40,6 @@ public class Player extends Entity{
 		collisionArea.width = gp.tileSize - (gp.scale-2)*gp.originalTileSize;//width of collision area
 		collisionArea.height = gp.tileSize - (gp.scale-2)*gp.originalTileSize;//height of collision area
 		
-		
 		setDefaultValues();
 		getPlayerImage();
 	}
@@ -49,7 +48,7 @@ public class Player extends Entity{
 		
 		worldX = gp.tileSize * 23;
 		worldY = gp.tileSize * 21;
-		speed = 5;
+		speed = 6;
 		direction = "down";
 		
 	}
@@ -125,6 +124,7 @@ public class Player extends Entity{
 		
 	}
 	
+	//interactions with objects
 	public void pickUpObject(int i) {
 		
 		if(i != 999) {
@@ -132,16 +132,32 @@ public class Player extends Entity{
 			
 			switch(objectName) {
 			case "Key": //picks up a key
+				gp.playSoundEffect(1);
 				numKey++;
 				gp.obj[i] = null;
-				System.out.println("Key: "+numKey);
+				gp.ui.showMessage("You obtained a key!");
 				break;
 			case "Door": //opens door if player has a key
 				if(numKey > 0) {
+					gp.playSoundEffect(3);
 					gp.obj[i] = null;
 					numKey--;
+					gp.ui.showMessage("You opened the door with the key!");
 				}
-				System.out.println("Key: "+numKey);
+				else{
+					gp.ui.showMessage("You need a key to open the door!");
+				}
+				break;
+			case "Boots":
+				gp.playSoundEffect(2);
+				speed += 1;
+				gp.obj[i] = null;
+				gp.ui.showMessage("Your movement speed has increased!");
+				break;
+			case "Chest":
+				gp.ui.gameFinished = true;
+				gp.stopMusic();
+				gp.playSoundEffect(4);
 				break;
 			}
 		}

@@ -9,12 +9,11 @@ import main.GamePanel;
 //parent class of all object classes
 public class SuperObject {
 	
-	GamePanel gp = new GamePanel();
 	public BufferedImage image;
 	public String name;
 	public boolean collision = false;
 	public int worldX, worldY;
-	public Rectangle collisionArea = new Rectangle(0, 0, gp.tileSize, gp.tileSize);
+	public Rectangle collisionArea = new Rectangle(0, 0, 48, 48);
 	public int collisionAreaDefaultX = 0;
 	public int collisionAreaDefaultY = 0;
 	
@@ -30,7 +29,6 @@ public class SuperObject {
 		   worldY - 2*gp.tileSize < gp.player.worldY + gp.player.screenY) {
 			
 			g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
-			
 		}
 		
 	}
