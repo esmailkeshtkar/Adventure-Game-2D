@@ -82,7 +82,7 @@ public class Player extends Entity{
 				worldX += speed;
 			}
 			
-			//used to alternate the sprites for movement
+			//used to alternate the sprite's for movement
 			spriteCounter++;
 			if(spriteCounter > 15)
 			{
@@ -105,7 +105,7 @@ public class Player extends Entity{
 		
 		BufferedImage image = null;
 		
-		//image based on direction
+		//image based on direction, switches for movement
 		switch(direction) {
 		case "up":
 			if(spriteNum == 1) {

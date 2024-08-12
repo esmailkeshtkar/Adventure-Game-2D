@@ -13,8 +13,8 @@ import main.GamePanel;
 public class TileManager {
 
 	GamePanel gp;
-	Tile[] tile;
-	int mapTileNum[][];
+	Tile[] tile; //A tile array that stores the different types of tiles
+	int mapTileNum[][];//a 2D array for the row and column of each tile
 	
 	public TileManager(GamePanel gp) {
 		this.gp = gp;
@@ -42,12 +42,15 @@ public class TileManager {
 			tile[2] = new Tile();
 			tile[2].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water00.png"));
 			
+			//earth tile
 			tile[3] = new Tile();
 			tile[3].image = ImageIO.read(getClass().getResourceAsStream("/tiles/earth.png"));
 			
+			//tree tile
 			tile[4] = new Tile();
 			tile[4].image = ImageIO.read(getClass().getResourceAsStream("/tiles/tree.png"));
 			
+			//sand tile
 			tile[5] = new Tile();
 			tile[5].image = ImageIO.read(getClass().getResourceAsStream("/tiles/sand.png"));
 			
@@ -68,6 +71,7 @@ public class TileManager {
 			int col = 0;
 			int row = 0;
 			
+			//adds the tile types read from the input file into the tile array
 			while(col < gp.maxWorldCol && row < gp.maxWorldRow) {
 				
 				String line = br.readLine();
@@ -93,6 +97,7 @@ public class TileManager {
 		}
 	}
 	
+	//draws the world tiles
 	public void draw(Graphics2D g2) {
 		
 		int worldCol = 0;
@@ -119,6 +124,7 @@ public class TileManager {
 				g2.drawImage(tile[tileNum].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
 				
 			}
+			
 			worldCol++;
 			
 			if(worldCol == gp.maxWorldCol) {
