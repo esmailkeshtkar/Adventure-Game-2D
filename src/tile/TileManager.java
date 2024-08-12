@@ -13,8 +13,8 @@ import main.GamePanel;
 public class TileManager {
 
 	GamePanel gp;
-	Tile[] tile; //A tile array that stores the different types of tiles
-	int mapTileNum[][];//a 2D array for the row and column of each tile
+	public Tile[] tile; //A tile array that stores the different types of tiles
+	public int mapTileNum[][];//a 2D array for the row and column of each tile
 	
 	public TileManager(GamePanel gp) {
 		this.gp = gp;
@@ -37,10 +37,12 @@ public class TileManager {
 			//wall tile
 			tile[1] = new Tile();
 			tile[1].image = ImageIO.read(getClass().getResourceAsStream("/tiles/wall.png"));
+			tile[1].collision = true;
 			
 			//water tile
 			tile[2] = new Tile();
 			tile[2].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water00.png"));
+			tile[2].collision = true;
 			
 			//earth tile
 			tile[3] = new Tile();
@@ -49,6 +51,7 @@ public class TileManager {
 			//tree tile
 			tile[4] = new Tile();
 			tile[4].image = ImageIO.read(getClass().getResourceAsStream("/tiles/tree.png"));
+			tile[4].collision = true;
 			
 			//sand tile
 			tile[5] = new Tile();
@@ -112,8 +115,8 @@ public class TileManager {
 			//ScreenX/Y is the position we draw
 			int worldX = worldCol * gp.tileSize;
 			int worldY = worldRow * gp.tileSize;
-			int screenX = worldX - gp.player.worldX + gp.player.screenX;//screen position
-			int screenY = worldY - gp.player.worldY + gp.player.screenY;//screen position
+			int screenX = worldX - gp.player.worldX + gp.player.screenX; //screen position
+			int screenY = worldY - gp.player.worldY + gp.player.screenY; //screen position
 			
 			//boundary of the screen so that the whole map is not drawn at once
 			if(worldX + 2*gp.tileSize > gp.player.worldX - gp.player.screenX &&

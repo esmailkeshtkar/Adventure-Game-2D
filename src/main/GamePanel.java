@@ -14,9 +14,9 @@ import tile.TileManager;
 public class GamePanel extends JPanel implements Runnable{
 	
 	//Screen settings
-	final int originalTileSize = 16; //16x16 tile standard for retro games
-	final int scale = 5; //scaling the size according to monitor screen sizes
-	public final int tileSize = originalTileSize * scale; //48x48 tile size 
+	public final int originalTileSize = 16; //16x16 tile standard for retro games
+	public final int scale = 5; //scaling the size according to monitor screen sizes
+	public final int tileSize = originalTileSize * scale;
 	//4:3 ratio 16 tiles horizontally and 12 vertically
 	public final int maxScreenCol = 16;
 	public final int maxScreenRow = 12;
@@ -32,10 +32,11 @@ public class GamePanel extends JPanel implements Runnable{
 	//FPS, the number of frames to be drawn per second
 	int FPS = 60;
 	
-	TileManager tileM = new TileManager(this);
+	public TileManager tileM = new TileManager(this);
 	
 	KeyHandler keyH = new KeyHandler();
 	Thread gameThread;
+	public CollisionDetector cDetector = new CollisionDetector(this);
 	public Player player = new Player(this, keyH);
 	
 	public GamePanel() {

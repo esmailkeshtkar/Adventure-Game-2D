@@ -1,5 +1,6 @@
 package entity;
 
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 //super/parent class for player and character classes
@@ -13,5 +14,7 @@ public class Entity {
 	
 	public int spriteCounter = 0;
 	public int spriteNum = 1;
+	public Rectangle collisionArea;
+	public boolean collisionOn = false;
 	
 }
