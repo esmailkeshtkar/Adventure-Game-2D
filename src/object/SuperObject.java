@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import main.GamePanel;
+import main.UtilityTool;
 
 //parent class of all object classes
 public class SuperObject {
@@ -16,6 +17,7 @@ public class SuperObject {
 	public Rectangle collisionArea = new Rectangle(0, 0, 48, 48);
 	public int collisionAreaDefaultX = 0;
 	public int collisionAreaDefaultY = 0;
+	UtilityTool uTool = new UtilityTool();
 	
 	public void draw(Graphics2D g2, GamePanel gp) {
 		

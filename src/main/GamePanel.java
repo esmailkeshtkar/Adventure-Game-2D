@@ -11,7 +11,7 @@ import entity.Player;
 import object.SuperObject;
 import tile.TileManager;
 
-//game screen
+//where most of the game functionality occurs
 public class GamePanel extends JPanel implements Runnable{
 	
 	//Screen settings
@@ -144,6 +144,12 @@ public class GamePanel extends JPanel implements Runnable{
 		
 		Graphics2D g2 = (Graphics2D)g;
 		
+		//DEBUG FOR PERFORMANCE
+		long drawStart = 0;
+		if(keyH.checkDrawTime == true) {
+			drawStart = System.nanoTime();
+		}
+		
 		//draw tile
 		tileM.draw(g2);
 
@@ -160,9 +166,20 @@ public class GamePanel extends JPanel implements Runnable{
 		//draw UI
 		ui.draw(g2);
 		
+		// DEBUG FOR PERFORMANCE
+		if(keyH.checkDrawTime == true) {
+			long drawEnd = System.nanoTime();
+			long passed = drawEnd - drawStart;
+			g2.setColor(Color.white);
+			g2.drawString("Draw time :" +passed, 10, 400);
+			System.out.println("Draw Time: " +passed);
+		}
+		
 		g2.dispose();
 	}
 	
+	
+	//music and SFX
 	public void playMusic(int i) {
 		
 		music.setFile(i);

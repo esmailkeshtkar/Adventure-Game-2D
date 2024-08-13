@@ -10,7 +10,7 @@ import java.text.DecimalFormat;
 import object.OBJ_Key;
 
 
-//on screen user interface for text messages, etc
+//on screen user interface
 public class UI {
 	
 	GamePanel gp;
@@ -29,7 +29,7 @@ public class UI {
 		
 		arial_40 = new Font("Arial", Font.PLAIN, 40);//instantiate font here so that it does not get instantiated every time draw is called
 		arial_80B = new Font("Arial", Font.BOLD, 80);//larger font for celebration
-		OBJ_Key key = new OBJ_Key();
+		OBJ_Key key = new OBJ_Key(gp);
 		keyImage = key.image;
 	}
 	
@@ -57,7 +57,7 @@ public class UI {
 			y = gp.screenHeight/2 - (gp.tileSize*3);
 			g2.drawString(text, x, y);
 			
-			//playtime message
+			//play time message
 			text = "Your time is: " +dFormat.format(playTime) + "!";
 			textLength = (int)g2.getFontMetrics().getStringBounds(text, g2).getWidth(); //used to calculate the exact coordinates of the center
 			x = gp.screenWidth/2 - textLength/2;

@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 
 import main.GamePanel;
 import main.KeyHandler;
+import main.UtilityTool;
 
 //manages the player entity
 public class Player extends Entity{
@@ -21,6 +22,7 @@ public class Player extends Entity{
 	public final int screenX; 
 	public final int screenY;
 	public int numKey = 0;
+	int standCounter = 0;
 	
 	public Player(GamePanel gp, KeyHandler keyH) {
 		
@@ -33,8 +35,9 @@ public class Player extends Entity{
 		
 		//collision area rectangle
 		collisionArea = new Rectangle();
-		collisionArea.x = gp.scale*2;//starting x
-		collisionArea.y = gp.scale*4;//starting y
+		
+		collisionArea.x = 4*gp.scale;//starting x
+		collisionArea.y = 8*gp.scale;//starting y
 		collisionAreaDefaultX = collisionArea.x;
 		collisionAreaDefaultY = collisionArea.y;
 		collisionArea.width = gp.tileSize - (gp.scale-2)*gp.originalTileSize;//width of collision area
@@ -48,7 +51,7 @@ public class Player extends Entity{
 		
 		worldX = gp.tileSize * 23;
 		worldY = gp.tileSize * 21;
-		speed = 6;
+		speed = 6;//how many pixels the character moves per frame
 		direction = "down";
 		
 	}
@@ -56,20 +59,29 @@ public class Player extends Entity{
 	//stores the player images for each direction
 	public void getPlayerImage() {
 		
+		up1 = setup("player_up_1");
+		up2 = setup("player_up_2");
+		down1 = setup("player_down_1");
+		down2 = setup("player_down_2");
+		left1 = setup("player_left_1");
+		left2 = setup("player_left_2");
+		right1 = setup("player_right_1");
+		right2 = setup("player_right_2");
+	}
+	
+	public BufferedImage setup(String imageName) {
+		UtilityTool uTool = new UtilityTool();
+		BufferedImage image = null;
+		
 		try {
+			image = ImageIO.read(getClass().getResourceAsStream("/player/" +imageName +".png"));
+			image = uTool.scaleImage(image,  gp.tileSize,  gp.tileSize);
 			
-			up1 = ImageIO.read(getClass().getResourceAsStream("/player/player_up_1.png"));
-			up2 = ImageIO.read(getClass().getResourceAsStream("/player/player_up_2.png"));
-			down1 = ImageIO.read(getClass().getResourceAsStream("/player/player_down_1.png"));
-			down2 = ImageIO.read(getClass().getResourceAsStream("/player/player_down_2.png"));
-			left1 = ImageIO.read(getClass().getResourceAsStream("/player/player_left_1.png"));
-			left2 = ImageIO.read(getClass().getResourceAsStream("/player/player_left_2.png"));
-			right1 = ImageIO.read(getClass().getResourceAsStream("/player/player_right_1.png"));
-			right2 = ImageIO.read(getClass().getResourceAsStream("/player/player_right_2.png"));
-			
-		}catch(IOException e) {
+		}catch(IOException e){
 			e.printStackTrace();
 		}
+		
+		return image;
 	}
 	
 	public void update() {
@@ -119,6 +131,14 @@ public class Player extends Entity{
 					spriteNum = 1;
 				}
 				spriteCounter = 0;
+			}
+		}
+		else {
+			standCounter++;
+			if(standCounter >= 20)
+			{
+				spriteNum = 1;
+				standCounter=0;
 			}
 		}
 		
@@ -206,7 +226,12 @@ public class Player extends Entity{
 			break;
 		}
 		
-		g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+		g2.drawImage(image, screenX, screenY, null);
+		
+		//DEBUG
+		//check collision rectangle
+		g2.setColor(Color.red);
+		g2.drawRect(screenX + collisionArea.x, screenY + collisionArea.y, collisionArea.width, collisionArea.height);
 		
 	}
 }
