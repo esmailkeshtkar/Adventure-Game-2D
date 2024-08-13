@@ -35,12 +35,12 @@ public class Player extends Entity{
 		//collision area rectangle
 		collisionArea = new Rectangle();
 		
-		collisionArea.x = 4*gp.scale;//starting x
-		collisionArea.y = 8*gp.scale;//starting y
+		collisionArea.x = 16;//starting x
+		collisionArea.y = 24;//starting y
 		collisionAreaDefaultX = collisionArea.x;
 		collisionAreaDefaultY = collisionArea.y;
-		collisionArea.width = gp.tileSize - (gp.scale-2)*gp.originalTileSize;//width of collision area
-		collisionArea.height = gp.tileSize - (gp.scale-2)*gp.originalTileSize;//height of collision area
+		collisionArea.width = 48;//width of collision area
+		collisionArea.height = 48;//height of collision area
 		
 		setDefaultValues();
 		getPlayerImage();
@@ -142,7 +142,14 @@ public class Player extends Entity{
 	
 	public void interactNPC(int i) {
 		if (i != 999) {
-			System.out.println("You are hitting an npc");
+			
+			if(gp.keyH.ePressed)
+			{
+				gp.gameState = gp.dialogueState;
+				gp.npc[i].speak();
+			}
+			
+			gp.keyH.ePressed = false;
 		}
 	}
 	
