@@ -137,4 +137,110 @@ public class CollisionDetector {
 		
 		return index;
 	}
+	
+	//check if player is colliding with NPC or Monster Collision
+	public int checkEntity(Entity entity, Entity[] target) {
+		int index = 999;
+		
+		//scan object array
+		for(int i = 0; i < target.length; i++) {
+			
+			if(target[i] != null) {
+				//Get entity's collision area position
+				entity.collisionArea.x = entity.worldX + entity.collisionArea.x;
+				entity.collisionArea.y = entity.worldY + entity.collisionArea.y;
+				
+				//Get the object's collision area position
+				target[i].collisionArea.x  = target[i].worldX + target[i].collisionArea.x;
+				target[i].collisionArea.y = target[i].worldY + target[i].collisionArea.y;
+				
+				//checks if objects are colliding
+				switch(entity.direction) {
+				case "up":
+					entity.collisionArea.y -= entity.speed;
+					if(entity.collisionArea.intersects(target[i].collisionArea)) {
+						entity.collisionOn = true;
+						index = i;
+					}
+					break;
+				case "down":
+					entity.collisionArea.y += entity.speed;
+					if(entity.collisionArea.intersects(target[i].collisionArea)) {
+						entity.collisionOn = true;
+						index = i;
+					}
+					break;
+				case "left":
+					entity.collisionArea.x -= entity.speed;
+					if(entity.collisionArea.intersects(target[i].collisionArea)) {
+						entity.collisionOn = true;
+						index = i;
+					}
+					break;
+				case "right":
+					entity.collisionArea.x += entity.speed;
+					if(entity.collisionArea.intersects(target[i].collisionArea)) {
+						entity.collisionOn = true;
+						index = i;
+					}
+					break;
+				}
+				
+				//reset collision area
+				entity.collisionArea.x = entity.collisionAreaDefaultX;
+				entity.collisionArea.y = entity.collisionAreaDefaultY;
+				target[i].collisionArea.x = target[i].collisionAreaDefaultX;
+				target[i].collisionArea.y = target[i].collisionAreaDefaultY;
+			}
+		}
+		
+		return index;
+	}
+	
+	//checks if an NPC or Monster is colliding with the player
+	public void checkPlayer(Entity entity) {
+		if(gp.player != null) {
+			//Get entity's collision area position
+			entity.collisionArea.x = entity.worldX + entity.collisionArea.x;
+			entity.collisionArea.y = entity.worldY + entity.collisionArea.y;
+			
+			//Get the object's collision area position
+			gp.player.collisionArea.x  = gp.player.worldX + gp.player.collisionArea.x;
+			gp.player.collisionArea.y = gp.player.worldY + gp.player.collisionArea.y;
+			
+			//checks if objects are colliding
+			switch(entity.direction) {
+			case "up":
+				entity.collisionArea.y -= entity.speed;
+				if(entity.collisionArea.intersects(gp.player.collisionArea)) {
+					entity.collisionOn = true;
+				}
+				break;
+			case "down":
+				entity.collisionArea.y += entity.speed;
+				if(entity.collisionArea.intersects(gp.player.collisionArea)) {
+					entity.collisionOn = true;
+				}
+				break;
+			case "left":
+				entity.collisionArea.x -= entity.speed;
+				if(entity.collisionArea.intersects(gp.player.collisionArea)) {
+					entity.collisionOn = true;
+				}
+				break;
+			case "right":
+				entity.collisionArea.x += entity.speed;
+				if(entity.collisionArea.intersects(gp.player.collisionArea)) {
+					entity.collisionOn = true;
+				}
+				break;
+			}
+			
+			//reset collision area
+			entity.collisionArea.x = entity.collisionAreaDefaultX;
+			entity.collisionArea.y = entity.collisionAreaDefaultY;
+			gp.player.collisionArea.x = gp.player.collisionAreaDefaultX;
+			gp.player.collisionArea.y = gp.player.collisionAreaDefaultY;
+		}
+	}
 }

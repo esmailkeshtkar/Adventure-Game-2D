@@ -15,18 +15,17 @@ import main.UtilityTool;
 //manages the player entity
 public class Player extends Entity{
 	
-	GamePanel gp;
 	KeyHandler keyH;
 	
 	//indicate where the player is drawn on the screen
 	public final int screenX; 
 	public final int screenY;
-	public int numKey = 0;
 	int standCounter = 0;
 	
 	public Player(GamePanel gp, KeyHandler keyH) {
 		
-		this.gp = gp;
+		super(gp);//calling constructor of super class
+		
 		this.keyH = keyH;
 		
 		//displays character at the center of the screen
@@ -59,29 +58,14 @@ public class Player extends Entity{
 	//stores the player images for each direction
 	public void getPlayerImage() {
 		
-		up1 = setup("player_up_1");
-		up2 = setup("player_up_2");
-		down1 = setup("player_down_1");
-		down2 = setup("player_down_2");
-		left1 = setup("player_left_1");
-		left2 = setup("player_left_2");
-		right1 = setup("player_right_1");
-		right2 = setup("player_right_2");
-	}
-	
-	public BufferedImage setup(String imageName) {
-		UtilityTool uTool = new UtilityTool();
-		BufferedImage image = null;
-		
-		try {
-			image = ImageIO.read(getClass().getResourceAsStream("/player/" +imageName +".png"));
-			image = uTool.scaleImage(image,  gp.tileSize,  gp.tileSize);
-			
-		}catch(IOException e){
-			e.printStackTrace();
-		}
-		
-		return image;
+		up1 = setup("/player/player_up_1");
+		up2 = setup("/player/player_up_2");
+		down1 = setup("/player/player_down_1");
+		down2 = setup("/player/player_down_2");
+		left1 = setup("/player/player_left_1");
+		left2 = setup("/player/player_left_2");
+		right1 = setup("/player/player_right_1");
+		right2 = setup("/player/player_right_2");
 	}
 	
 	public void update() {
@@ -109,6 +93,10 @@ public class Player extends Entity{
 			//Check object collision
 			int objIndex = gp.cDetector.checkObject(this, true);
 			pickUpObject(objIndex);
+			
+			//Check NPC Collision
+			int npcIndex = gp.cDetector.checkEntity(this, gp.npc);
+			interactNPC(npcIndex);
 			
 			//if tile collision is false, the player can move
 			if(collisionOn == false) {
@@ -148,38 +136,13 @@ public class Player extends Entity{
 	public void pickUpObject(int i) {
 		
 		if(i != 999) {
-			String objectName = gp.obj[i].name;
 			
-			switch(objectName) {
-			case "Key": //picks up a key
-				gp.playSoundEffect(1);
-				numKey++;
-				gp.obj[i] = null;
-				gp.ui.showMessage("You obtained a key!");
-				break;
-			case "Door": //opens door if player has a key
-				if(numKey > 0) {
-					gp.playSoundEffect(3);
-					gp.obj[i] = null;
-					numKey--;
-					gp.ui.showMessage("You opened the door with the key!");
-				}
-				else{
-					gp.ui.showMessage("You need a key to open the door!");
-				}
-				break;
-			case "Boots":
-				gp.playSoundEffect(2);
-				speed += 1;
-				gp.obj[i] = null;
-				gp.ui.showMessage("Your movement speed has increased!");
-				break;
-			case "Chest":
-				gp.ui.gameFinished = true;
-				gp.stopMusic();
-				gp.playSoundEffect(4);
-				break;
-			}
+		}
+	}
+	
+	public void interactNPC(int i) {
+		if (i != 999) {
+			System.out.println("You are hitting an npc");
 		}
 	}
 	
