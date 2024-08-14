@@ -49,6 +49,7 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	//Game State variables
 	public int gameState;
+	public int titleState = 0;
 	public final int playState = 1;
 	public final int pauseState = 2;
 	public final int dialogueState = 3;
@@ -68,7 +69,7 @@ public class GamePanel extends JPanel implements Runnable{
 		aPlacer.setNPC();
 		playMusic(0); //plays the bgm
 		stopMusic();
-		gameState = playState;
+		gameState = titleState; //game starts from the title
 		
 	}
 	
@@ -173,28 +174,37 @@ public class GamePanel extends JPanel implements Runnable{
 			drawStart = System.nanoTime();
 		}
 		
-		//draw tile
-		tileM.draw(g2);
+		//Title Screen
+		if(gameState == titleState) {
+			
+			ui.draw(g2);
+		}
+		
+		//Others
+		else {
+			//draw tile
+			tileM.draw(g2);
 
-		//draw object
-		for(int i = 0; i <  obj.length; i++) {
-			if(obj[i] != null) {
-				obj[i].draw(g2, this);
+			//draw object
+			for(int i = 0; i <  obj.length; i++) {
+				if(obj[i] != null) {
+					obj[i].draw(g2, this);
+				}
 			}
-		}
-		
-		//NPC
-		for(int i = 0; i < npc.length; i++) {
-			if(npc[i] != null) {
-				npc[i].draw(g2);
+			
+			//NPC
+			for(int i = 0; i < npc.length; i++) {
+				if(npc[i] != null) {
+					npc[i].draw(g2);
+				}
 			}
+			
+			//draw player
+			player.draw(g2);
+			
+			//draw UI
+			ui.draw(g2);
 		}
-		
-		//draw player
-		player.draw(g2);
-		
-		//draw UI
-		ui.draw(g2);
 		
 		// DEBUG FOR PERFORMANCE
 		if(keyH.checkDrawTime == true) {
