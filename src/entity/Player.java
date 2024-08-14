@@ -1,16 +1,14 @@
 package entity;
 
 import java.awt.Color;
+
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
 
 import main.GamePanel;
 import main.KeyHandler;
-import main.UtilityTool;
 
 //manages the player entity
 public class Player extends Entity{
@@ -52,6 +50,10 @@ public class Player extends Entity{
 		worldY = gp.tileSize * 21;
 		speed = 6;//how many pixels the character moves per frame
 		direction = "down";
+		
+		//PLAYER STATUS
+		maxLife = 6;
+		life = maxLife;
 		
 	}
 	
@@ -98,6 +100,11 @@ public class Player extends Entity{
 			int npcIndex = gp.cDetector.checkEntity(this, gp.npc);
 			interactNPC(npcIndex);
 			
+			//Check Event
+			gp.eHandler.checkEvent();
+
+			gp.keyH.ePressed = false;
+			
 			//if tile collision is false, the player can move
 			if(collisionOn == false) {
 				switch(direction) {
@@ -143,13 +150,10 @@ public class Player extends Entity{
 	public void interactNPC(int i) {
 		if (i != 999) {
 			
-			if(gp.keyH.ePressed)
-			{
+			if(gp.keyH.ePressed){
 				gp.gameState = gp.dialogueState;
 				gp.npc[i].speak();
 			}
-			
-			gp.keyH.ePressed = false;
 		}
 	}
 	

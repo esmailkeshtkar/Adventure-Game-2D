@@ -32,14 +32,15 @@ public class GamePanel extends JPanel implements Runnable{
 	//FPS, the number of frames to be drawn per second
 	int FPS = 60;
 	
+	//SYSTEM
 	public TileManager tileM = new TileManager(this);
-	
 	public KeyHandler keyH = new KeyHandler(this);
 	Sound music = new Sound();
 	Sound soundEffect = new Sound();
 	public CollisionDetector cDetector = new CollisionDetector(this);
 	public AssetPlacer aPlacer = new AssetPlacer(this);
 	public UI ui = new UI(this);
+	public EventHandler eHandler = new EventHandler(this);
 	Thread gameThread;
 	
 	//entity and objects

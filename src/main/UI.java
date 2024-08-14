@@ -1,6 +1,7 @@
 package main;
 
 import java.awt.BasicStroke;
+
 import java.awt.Color;
 
 import java.awt.Font;
@@ -11,7 +12,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
-
+import object.SuperObject;
+import object.OBJ_Heart;
 import object.OBJ_Key;
 
 
@@ -21,6 +23,7 @@ public class UI {
 	GamePanel gp;
 	Graphics2D g2;
 	Font maruMonica, purisaB;
+	BufferedImage heart_full, heart_half, heart_blank;
 	public boolean messageOn = false;
 	public String message = "";
 	int messageCounter = 0; //how long the message will be displayed
@@ -43,6 +46,12 @@ public class UI {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		//CREATE HUD OBJECT
+		SuperObject heart = new OBJ_Heart(gp);
+		heart_full = heart.image;
+		heart_half = heart.image2;
+		heart_blank = heart.image3;
 
 	}
 	
@@ -62,20 +71,51 @@ public class UI {
 		//TITLE STATE
 		if(gp.gameState == gp.titleState) {
 			drawTitleScreen();
+		}else {
+			drawPlayerLife();
+			//PLAY STATE
+			if(gp.gameState == gp.playState) {
+				//Do playstate stuff later
+			}
+			//PAUSE STATE
+			if(gp.gameState == gp.pauseState) {
+				drawPauseScreen();
+			}
+			//DIALOGUE STATE
+			if(gp.gameState == gp.dialogueState) {
+				drawDialogueScreen();
+			}
+		}
+	}
+	
+	public void drawPlayerLife() {
+		
+		//gp.player.life = 5;
+		int x = gp.tileSize/2;
+		int y = gp.tileSize/2;
+		int i = 0;
+		
+		//DRAW MAX LIFE
+		while(i < gp.player.maxLife/2){
+			g2.drawImage(heart_blank,  x,  y,  null);
+			i++;
+			x+= gp.tileSize;
 		}
 		
-		//PLAY STATE
-		if(gp.gameState == gp.playState) {
-			//Do playstate stuff later
-			
-		}
-		//PAUSE STATE
-		if(gp.gameState == gp.pauseState) {
-			drawPauseScreen();
-		}
-		//DIALOGUE STATE
-		if(gp.gameState == gp.dialogueState) {
-			drawDialogueScreen();
+		//reset
+		x = gp.tileSize/2;
+		y = gp.tileSize/2;
+		i = 0;
+		
+		//draw current life
+		while(i < gp.player.life){
+			g2.drawImage(heart_half,  x,  y,  null);
+			i++;
+			if(i < gp.player.life) {
+				g2.drawImage(heart_full,  x,  y,  null);
+			}
+			i++;
+			x+=gp.tileSize;
 		}
 		
 	}
