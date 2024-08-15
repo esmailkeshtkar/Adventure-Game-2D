@@ -1,7 +1,8 @@
 package entity;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
-
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -48,6 +49,9 @@ public class Player extends Entity{
 		
 		worldX = gp.tileSize * 23;
 		worldY = gp.tileSize * 21;
+//		worldX = gp.tileSize * 10;
+//		worldY = gp.tileSize * 13;
+		
 		speed = 6;//how many pixels the character moves per frame
 		direction = "down";
 		
@@ -100,6 +104,10 @@ public class Player extends Entity{
 			int npcIndex = gp.cDetector.checkEntity(this, gp.npc);
 			interactNPC(npcIndex);
 			
+			//Check Monster Collision
+			int monIndex = gp.cDetector.checkEntity(this, gp.mon);
+			contactMonster(monIndex);
+			
 			//Check Event
 			gp.eHandler.checkEvent();
 
@@ -137,6 +145,15 @@ public class Player extends Entity{
 			}
 		}
 		
+		//Invincible Counter, the period of time the player is invincible after getting hit
+		if(invincible == true) {
+			invincibleCounter++;
+			if(invincibleCounter >= 60) {
+				invincible = false;
+				invincibleCounter = 0;
+			}
+		}
+		
 	}
 	
 	//interactions with objects
@@ -153,6 +170,16 @@ public class Player extends Entity{
 			if(gp.keyH.ePressed){
 				gp.gameState = gp.dialogueState;
 				gp.npc[i].speak();
+			}
+		}
+	}
+	
+	public void contactMonster(int i) {
+		if(i != 999) {
+			//player receives damage only when not invincible
+			if(invincible == false) {
+				life--;
+				invincible = true;
 			}
 		}
 	}
@@ -200,12 +227,24 @@ public class Player extends Entity{
 			break;
 		}
 		
+		//set opacity level if player is hit to show they are invincible
+		if(invincible == true) {
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
+		}
+		
 		g2.drawImage(image, screenX, screenY, null);
+
+		//reset opacity
+		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+		
 		
 		//DEBUG
 		//check collision rectangle
 		g2.setColor(Color.red);
 		g2.drawRect(screenX + collisionArea.x, screenY + collisionArea.y, collisionArea.width, collisionArea.height);
+//		g2.setFont(new Font("Arial", Font.PLAIN, 26));
+//		g2.setColor(Color.white);
+//		g2.drawString("Invincible: " +invincibleCounter, gp.tileSize, gp.tileSize*5);
 		
 	}
 }

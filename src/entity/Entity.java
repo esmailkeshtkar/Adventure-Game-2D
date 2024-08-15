@@ -18,15 +18,21 @@ public class Entity {
 	public int speed;
 	//an image with an accessible buffer of image data, stores image files
 	public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2; 
-	public String direction;
+	public String direction = "down";
 	public int spriteCounter = 0;
 	public int spriteNum = 1;
 	public Rectangle collisionArea = new Rectangle(0, 0, 85, 85);
 	public int collisionAreaDefaultX, collisionAreaDefaultY;
 	public boolean collisionOn = false;
 	public int actionLockCounter = 0;
+	public boolean invincible = false;
+	public int invincibleCounter = 0;
 	String dialogues[] = new String[20];
 	int dialogueIndex = 0;
+	public BufferedImage image, image2, image3;
+	public String name;
+	public boolean collision = false;
+	public int entityType; //0 = player, 1 = NPC, 2 = monster
 	
 	//CHARACTER STATUS
 	public int maxLife, life;
@@ -60,7 +66,18 @@ public class Entity {
 		collisionOn = false;
 		gp.cDetector.checkTile(this);
 		gp.cDetector.checkObject(this, false);
-		gp.cDetector.checkPlayer(this);
+		gp.cDetector.checkEntity(this,  gp.npc);
+		gp.cDetector.checkEntity(this, gp.mon);
+		boolean contactPlayer = gp.cDetector.checkPlayer(this);
+		
+		//if monster is contacting player
+		if(this.entityType == 2 && contactPlayer == true) {
+			if(gp.player.invincible == false) {
+				//damage can be received
+				gp.player.life--;
+				gp.player.invincible = true;
+			}
+		}
 		
 		if(collisionOn == false) {
 			switch(direction) {

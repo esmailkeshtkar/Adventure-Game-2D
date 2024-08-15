@@ -1,15 +1,18 @@
 package main;
 
 import java.awt.Color;
+
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import javax.swing.JPanel;
 
 import entity.Entity;
 import entity.Player;
-import object.SuperObject;
 import tile.TileManager;
 
 //where most of the game functionality occurs
@@ -43,10 +46,12 @@ public class GamePanel extends JPanel implements Runnable{
 	public EventHandler eHandler = new EventHandler(this);
 	Thread gameThread;
 	
-	//entity and objects
+	//player, entities, npcs, objects, monsters
 	public Player player = new Player(this, keyH);
-	public SuperObject obj[] = new SuperObject[10];
+	public Entity obj[] = new Entity[10];
 	public Entity npc[] = new Entity[10];
+	public Entity mon[] = new Entity[20];
+	ArrayList<Entity> entityList = new ArrayList<>();
 	
 	//Game State variables
 	public int gameState;
@@ -68,6 +73,7 @@ public class GamePanel extends JPanel implements Runnable{
 		
 		aPlacer.setObject();
 		aPlacer.setNPC();
+		aPlacer.setMonster();
 		playMusic(0); //plays the bgm
 		stopMusic();
 		gameState = titleState; //game starts from the title
@@ -155,7 +161,14 @@ public class GamePanel extends JPanel implements Runnable{
 					npc[i].update();
 				}
 			}
+			//MONSTER
+			for(int i = 0; i < mon.length; i++) {
+				if(mon[i] !=null) {
+					mon[i].update();
+				}
+			}
 		}
+		
 		if(gameState == pauseState) {
 			//nothing
 		}
@@ -183,27 +196,56 @@ public class GamePanel extends JPanel implements Runnable{
 		
 		//Others
 		else {
-			//draw tile
+			//DRAW TILES
 			tileM.draw(g2);
-
-			//draw object
-			for(int i = 0; i <  obj.length; i++) {
-				if(obj[i] != null) {
-					obj[i].draw(g2, this);
-				}
-			}
 			
-			//NPC
+			//add player to entity list
+			entityList.add(player);
+			
+			//add npcs to entity list
 			for(int i = 0; i < npc.length; i++) {
 				if(npc[i] != null) {
-					npc[i].draw(g2);
+					entityList.add(npc[i]);
 				}
 			}
 			
-			//draw player
-			player.draw(g2);
+			//add obj to entity list
+			for(int i = 0; i < obj.length; i++) {
+				if(obj[i] != null) {
+					entityList.add(obj[i]);
+				}
+			}
 			
-			//draw UI
+			//ad mon to entity list
+			for(int i = 0; i < mon.length; i++) {
+				if(mon[i] != null) {
+					entityList.add(mon[i]);
+				}
+			}
+			
+			// SORT ENTITY LIST BASED ON WORLD Y
+			Collections.sort(entityList, new Comparator<Entity>(){
+				
+				@Override
+				public int compare(Entity e1, Entity e2) {
+					
+					int result = Integer.compare(e1.worldY, e2.worldY);
+					return result;
+				}
+				
+			});
+			
+			//DRAW ENTITIES
+			for(int i = 0; i < entityList.size(); i++){
+				entityList.get(i).draw(g2);
+			}
+			
+			//EMPTY ENTITY LIST
+			for(int i = 0; i < entityList.size(); i++){
+				entityList.remove(i);
+			}
+			
+			//DRAW UI
 			ui.draw(g2);
 		}
 		

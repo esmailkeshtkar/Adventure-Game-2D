@@ -82,49 +82,21 @@ public class CollisionDetector {
 				//checks if objects are colliding
 				switch(entity.direction) {
 				case "up":
-					entity.collisionArea.y -= entity.speed;
-					if(entity.collisionArea.intersects(gp.obj[i].collisionArea)) {
-						if(gp.obj[i].collision == true) {
-							entity.collisionOn = true;
-						}
-						if(player == true) {
-							index = i;
-						}
-					}
-					break;
+					entity.collisionArea.y -= entity.speed; break;
 				case "down":
-					entity.collisionArea.y += entity.speed;
-					if(entity.collisionArea.intersects(gp.obj[i].collisionArea)) {
-						if(gp.obj[i].collision == true) {
-							entity.collisionOn = true;
-						}
-						if(player == true) {
-							index = i;
-						}
-					}
-					break;
+					entity.collisionArea.y += entity.speed; break;
 				case "left":
-					entity.collisionArea.x -= entity.speed;
-					if(entity.collisionArea.intersects(gp.obj[i].collisionArea)) {
-						if(gp.obj[i].collision == true) {
-							entity.collisionOn = true;
-						}
-						if(player == true) {
-							index = i;
-						}
-					}
-					break;
+					entity.collisionArea.x -= entity.speed; break;
 				case "right":
-					entity.collisionArea.x += entity.speed;
-					if(entity.collisionArea.intersects(gp.obj[i].collisionArea)) {
-						if(gp.obj[i].collision == true) {
-							entity.collisionOn = true;
-						}
-						if(player == true) {
-							index = i;
-						}
+					entity.collisionArea.x += entity.speed; break;
+				}
+				if(entity.collisionArea.intersects(gp.obj[i].collisionArea)) {
+					if(gp.obj[i].collision == true) {
+						entity.collisionOn = true;
 					}
-					break;
+					if(player == true) {
+						index = i;
+					}
 				}
 				
 				//reset collision area
@@ -156,34 +128,16 @@ public class CollisionDetector {
 				
 				//checks if objects are colliding
 				switch(entity.direction) {
-				case "up":
-					entity.collisionArea.y -= entity.speed;
-					if(entity.collisionArea.intersects(target[i].collisionArea)) {
+				case "up": entity.collisionArea.y -= entity.speed; break;
+				case "down": entity.collisionArea.y += entity.speed; break;
+				case "left": entity.collisionArea.x -= entity.speed; break;
+				case "right": entity.collisionArea.x += entity.speed; break;
+				}
+				if(entity.collisionArea.intersects(target[i].collisionArea)) {
+					if(target[i] != entity) {
 						entity.collisionOn = true;
 						index = i;
 					}
-					break;
-				case "down":
-					entity.collisionArea.y += entity.speed;
-					if(entity.collisionArea.intersects(target[i].collisionArea)) {
-						entity.collisionOn = true;
-						index = i;
-					}
-					break;
-				case "left":
-					entity.collisionArea.x -= entity.speed;
-					if(entity.collisionArea.intersects(target[i].collisionArea)) {
-						entity.collisionOn = true;
-						index = i;
-					}
-					break;
-				case "right":
-					entity.collisionArea.x += entity.speed;
-					if(entity.collisionArea.intersects(target[i].collisionArea)) {
-						entity.collisionOn = true;
-						index = i;
-					}
-					break;
 				}
 				
 				//reset collision area
@@ -198,7 +152,10 @@ public class CollisionDetector {
 	}
 	
 	//checks if an NPC or Monster is colliding with the player
-	public void checkPlayer(Entity entity) {
+	public boolean checkPlayer(Entity entity) {
+		
+		boolean contactPlayer = false;
+		
 		if(gp.player != null) {
 			//Get entity's collision area position
 			entity.collisionArea.x = entity.worldX + entity.collisionArea.x;
@@ -210,30 +167,15 @@ public class CollisionDetector {
 			
 			//checks if objects are colliding
 			switch(entity.direction) {
-			case "up":
-				entity.collisionArea.y -= entity.speed;
-				if(entity.collisionArea.intersects(gp.player.collisionArea)) {
-					entity.collisionOn = true;
-				}
-				break;
-			case "down":
-				entity.collisionArea.y += entity.speed;
-				if(entity.collisionArea.intersects(gp.player.collisionArea)) {
-					entity.collisionOn = true;
-				}
-				break;
-			case "left":
-				entity.collisionArea.x -= entity.speed;
-				if(entity.collisionArea.intersects(gp.player.collisionArea)) {
-					entity.collisionOn = true;
-				}
-				break;
-			case "right":
-				entity.collisionArea.x += entity.speed;
-				if(entity.collisionArea.intersects(gp.player.collisionArea)) {
-					entity.collisionOn = true;
-				}
-				break;
+			case "up": entity.collisionArea.y -= entity.speed; break;
+			case "down": entity.collisionArea.y += entity.speed; break;
+			case "left": entity.collisionArea.x -= entity.speed; break;
+			case "right": entity.collisionArea.x += entity.speed; break;
+			}
+			
+			if(entity.collisionArea.intersects(gp.player.collisionArea)) {
+				entity.collisionOn = true;
+				contactPlayer = true;
 			}
 			
 			//reset collision area
@@ -241,6 +183,9 @@ public class CollisionDetector {
 			entity.collisionArea.y = entity.collisionAreaDefaultY;
 			gp.player.collisionArea.x = gp.player.collisionAreaDefaultX;
 			gp.player.collisionArea.y = gp.player.collisionAreaDefaultY;
+			
 		}
+		
+		return contactPlayer;
 	}
 }
