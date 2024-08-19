@@ -10,6 +10,8 @@ import java.awt.image.BufferedImage;
 
 import main.GamePanel;
 import main.KeyHandler;
+import object.OBJ_Shield_Wood;
+import object.OBJ_Sword_Normal;
 
 //manages the player entity
 public class Player extends Entity{
@@ -20,6 +22,7 @@ public class Player extends Entity{
 	public final int screenX; 
 	public final int screenY;
 	int standCounter = 0;
+	public boolean atkCanceled = false;
 	
 	public Player(GamePanel gp, KeyHandler keyH) {
 		
@@ -62,9 +65,27 @@ public class Player extends Entity{
 		//PLAYER STATUS
 		maxLife = 6;
 		life = maxLife;
+		level = 1;
+		str = 1; //more str = more damage dealt
+		dex = 1; //more dex = less dmg taken
+		exp = 0;
+		nextLvlExp = 5;
+		coins = 0;
+		currentWpn = new OBJ_Sword_Normal(gp);
+		currentShield = new OBJ_Shield_Wood(gp);
+		atk = getAtk(); //atk is decided by str and weapon
+		def = getDef(); //def is decided by dex and shield
 		
 	}
 	
+	private int getDef() {
+		return dex * currentShield.defValue;
+	}
+
+	private int getAtk() {
+		return str*currentWpn.atkValue;
+	}
+
 	//stores the player images for each direction
 	public void getPlayerImage() {
 		
@@ -140,6 +161,14 @@ public class Player extends Entity{
 				}
 			}
 			
+			//player can attack
+			if(keyH.ePressed == true && atkCanceled == false) {
+				gp.playSoundEffect(7);
+				atking = true;
+				spriteCounter = 0;
+			}
+			
+			atkCanceled = false;
 			gp.keyH.ePressed = false;
 			
 			//used to alternate the sprite's for movement
@@ -235,12 +264,9 @@ public class Player extends Entity{
 		
 		if(gp.keyH.ePressed == true) {
 			if (i != 999) {
+				atkCanceled = true;
 				gp.gameState = gp.dialogueState;
 				gp.npc[i].speak();
-			}
-			else {
-				gp.playSoundEffect(7); //play swing sound effect
-				atking = true;
 			}
 		}
 		

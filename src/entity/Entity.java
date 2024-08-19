@@ -47,11 +47,25 @@ public class Entity {
 	int dyingCounter = 0;
 	int hpBarCounter = 0;
 	
-	//CHARACTER STATUS
+	//CHARACTER ATTRIBUTES
 	public int entityType; //0 = player, 1 = NPC, 2 = monster
 	public String name;
 	public int maxLife, life;
 	public int speed;
+	public int level;
+	public int exp;
+	public int nextLvlExp;
+	public int str;
+	public int dex;
+	public int atk;
+	public int def;
+	public int coins;
+	public Entity currentWpn;
+	public Entity currentShield;
+	
+	// ITEM ATTRIBUTES
+	public int atkValue;
+	public int defValue;
 	
 	public Entity(GamePanel gp) {
 		this.gp = gp;
