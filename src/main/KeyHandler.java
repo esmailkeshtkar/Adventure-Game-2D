@@ -25,77 +25,75 @@ public class KeyHandler implements KeyListener{
 		//gets the code of the key that was pressed
 		int code = e.getKeyCode();
 		//TITLE STATE
-		if(gp.ui.titleScreenState == 0) {
-			if(gp.gameState == gp.titleState) {
-				if(code == KeyEvent.VK_W) {
-					gp.ui.commandNum--;
-					if(gp.ui.commandNum < 0) {
-						gp.ui.commandNum = 2;
-					}
+		if(gp.gameState == gp.titleState) {
+			if(code == KeyEvent.VK_W) {
+				gp.ui.commandNum--;
+				if(gp.ui.commandNum < 0) {
+					gp.ui.commandNum = 2;
 				}
-				if(code == KeyEvent.VK_S) {
-					gp.ui.commandNum++;
-					if(gp.ui.commandNum > 2)
-					{
-						gp.ui.commandNum = 0;
-					}
+			}
+			if(code == KeyEvent.VK_S) {
+				gp.ui.commandNum++;
+				if(gp.ui.commandNum > 2)
+				{
+					gp.ui.commandNum = 0;
 				}
-				
-				if(code == KeyEvent.VK_E) {
-					if(gp.ui.commandNum == 0) {
-						gp.ui.titleScreenState = 1;
-					}
-					else if (gp.ui.commandNum == 1) {
-						//add later
-					}
-					else if (gp.ui.commandNum == 2) {
-						System.exit(0);
-					}
+			}
+			
+			if(code == KeyEvent.VK_E) {
+				if(gp.ui.commandNum == 0) {
+					gp.gameState = gp.playState;
+				}
+				else if (gp.ui.commandNum == 1) {
+					//add later
+				}
+				else if (gp.ui.commandNum == 2) {
+					System.exit(0);
 				}
 			}
 		}
 		
-		else if(gp.ui.titleScreenState == 1) {
-			if(gp.gameState == gp.titleState) {
-				if(code == KeyEvent.VK_W) {
-					gp.ui.commandNum--;
-					if(gp.ui.commandNum < 0) {
-						gp.ui.commandNum = 3;
-					}
-				}
-				if(code == KeyEvent.VK_S) {
-					gp.ui.commandNum++;
-					if(gp.ui.commandNum > 3)
-					{
-						gp.ui.commandNum = 0;
-					}
-				}
-				
-				if(code == KeyEvent.VK_E) {
-					if(gp.ui.commandNum == 0) {
-						System.out.println("Do fighter specific stuff");
-						gp.gameState = gp.playState;
-						gp.playMusic(0);
-					}
-					else if (gp.ui.commandNum == 1) {
-						System.out.println("Do fighter specific stuff");
-						gp.gameState = gp.playState;
-						gp.playMusic(0);
-					}
-					else if (gp.ui.commandNum == 2) {
-						System.out.println("Do fighter specific stuff");
-						gp.gameState = gp.playState;
-						gp.playMusic(0);
-					}
-					else if (gp.ui.commandNum == 3) {
-						gp.ui.titleScreenState = 0;
-					}
-				}
-			}
-		}
+//		else if(gp.ui.titleScreenState == 1) {
+//			if(gp.gameState == gp.titleState) {
+//				if(code == KeyEvent.VK_W) {
+//					gp.ui.commandNum--;
+//					if(gp.ui.commandNum < 0) {
+//						gp.ui.commandNum = 3;
+//					}
+//				}
+//				if(code == KeyEvent.VK_S) {
+//					gp.ui.commandNum++;
+//					if(gp.ui.commandNum > 3)
+//					{
+//						gp.ui.commandNum = 0;
+//					}
+//				}
+//				
+//				if(code == KeyEvent.VK_E) {
+//					if(gp.ui.commandNum == 0) {
+//						System.out.println("Do fighter specific stuff");
+//						gp.gameState = gp.playState;
+//						gp.playMusic(0);
+//					}
+//					else if (gp.ui.commandNum == 1) {
+//						System.out.println("Do fighter specific stuff");
+//						gp.gameState = gp.playState;
+//						gp.playMusic(0);
+//					}
+//					else if (gp.ui.commandNum == 2) {
+//						System.out.println("Do fighter specific stuff");
+//						gp.gameState = gp.playState;
+//						gp.playMusic(0);
+//					}
+//					else if (gp.ui.commandNum == 3) {
+//						gp.ui.titleScreenState = 0;
+//					}
+//				}
+//			}
+//		}
 		
 		//PLAY STATE
-		if(gp.gameState == gp.playState) {
+		else if(gp.gameState == gp.playState) {
 			//W Key pressed
 			if(code == KeyEvent.VK_W) {
 				upPressed = true;

@@ -41,8 +41,12 @@ public class Player extends Entity{
 		collisionArea.width = 48;//width of collision area
 		collisionArea.height = 32;//height of collision area
 		
+		atkArea.width = gp.tileSize-2*gp.originalTileSize;
+		atkArea.height = gp.tileSize-2*gp.originalTileSize;
+		
 		setDefaultValues();
 		getPlayerImage();
+		getPlayerAtkImage();
 	}
 	
 	public void setDefaultValues() {
@@ -64,20 +68,35 @@ public class Player extends Entity{
 	//stores the player images for each direction
 	public void getPlayerImage() {
 		
-		up1 = setup("/player/player_up_1");
-		up2 = setup("/player/player_up_2");
-		down1 = setup("/player/player_down_1");
-		down2 = setup("/player/player_down_2");
-		left1 = setup("/player/player_left_1");
-		left2 = setup("/player/player_left_2");
-		right1 = setup("/player/player_right_1");
-		right2 = setup("/player/player_right_2");
+		up1 = setup("/player/boy_up_1", gp.tileSize, gp.tileSize);
+		up2 = setup("/player/boy_up_2", gp.tileSize, gp.tileSize);
+		down1 = setup("/player/boy_down_1", gp.tileSize, gp.tileSize);
+		down2 = setup("/player/boy_down_2", gp.tileSize, gp.tileSize);
+		left1 = setup("/player/boy_left_1", gp.tileSize, gp.tileSize);
+		left2 = setup("/player/boy_left_2", gp.tileSize, gp.tileSize);
+		right1 = setup("/player/boy_right_1", gp.tileSize, gp.tileSize);
+		right2 = setup("/player/boy_right_2", gp.tileSize, gp.tileSize);
+	}
+	
+	public void getPlayerAtkImage() {
+		
+		atkUp1 = setup("/player/boy_attack_up_1", gp.tileSize, gp.tileSize*2);
+		atkUp2 = setup("/player/boy_attack_up_2", gp.tileSize, gp.tileSize*2);
+		atkDown1 = setup("/player/boy_attack_down_1", gp.tileSize, gp.tileSize*2);
+		atkDown2 = setup("/player/boy_attack_down_2", gp.tileSize, gp.tileSize*2);
+		atkLeft1 = setup("/player/boy_attack_left_1", gp.tileSize*2, gp.tileSize);
+		atkLeft2 = setup("/player/boy_attack_left_2", gp.tileSize*2, gp.tileSize);
+		atkRight1 = setup("/player/boy_attack_right_1", gp.tileSize*2, gp.tileSize);
+		atkRight2 = setup("/player/boy_attack_right_2", gp.tileSize*2, gp.tileSize);
 	}
 	
 	public void update() {
 		
-		if(keyH.upPressed == true || keyH.downPressed == true 
-		|| keyH.leftPressed == true || keyH.rightPressed == true) {
+		if(atking == true) {
+			attacking();
+		}
+		else if(keyH.upPressed == true || keyH.downPressed == true 
+		|| keyH.leftPressed == true || keyH.rightPressed == true || keyH.ePressed == true) {
 			//character movement based on key pressed
 			if(keyH.upPressed == true) {
 				direction = "up";
@@ -110,11 +129,9 @@ public class Player extends Entity{
 			
 			//Check Event
 			gp.eHandler.checkEvent();
-
-			gp.keyH.ePressed = false;
 			
 			//if tile collision is false, the player can move
-			if(collisionOn == false) {
+			if(collisionOn == false && keyH.ePressed == false) {
 				switch(direction) {
 				case "up": worldY -= speed; break;
 				case "down": worldY += speed; break;
@@ -122,6 +139,8 @@ public class Player extends Entity{
 				case "right": worldX += speed; break;
 				}
 			}
+			
+			gp.keyH.ePressed = false;
 			
 			//used to alternate the sprite's for movement
 			spriteCounter++;
@@ -156,6 +175,54 @@ public class Player extends Entity{
 		
 	}
 	
+	//attacking sprite counter
+	public void attacking() {
+		
+		spriteCounter++;
+		
+		if(spriteCounter <= 5) {
+			spriteNum = 1;
+		}
+		if(spriteCounter > 5 && spriteCounter <= 25) {
+			spriteNum = 2;
+			
+			//hit detection
+			//store players current worldx, worldy and collision area
+			int currentWorldX =  worldX;
+			int currentWorldY = worldY;
+			int collisionAreaWidth = collisionArea.width;
+			int collisionAreaHeight = collisionArea.height;
+			
+			//Adjust player's worldx and worldy for the atk area
+			switch(direction) {
+			case "up": worldY -= atkArea.height; break;
+			case "down": worldY += atkArea.height; break;
+			case "left": worldX -= atkArea.width; break;
+			case "right": worldX += atkArea.width; break;
+			}
+			
+			//change collision area to atk area
+			collisionArea.width = atkArea.width;
+			collisionArea.height = atkArea.height;
+			
+			//check monster collision with updated world x, y and collision area
+			int monIndex = gp.cDetector.checkEntity(this, gp.mon);
+			dmgMonster(monIndex);
+			
+			//after checking the collision, restore original variables
+			worldX = currentWorldX;
+			worldY = currentWorldY;
+			collisionArea.width = collisionAreaWidth;
+			collisionArea.height = collisionAreaHeight;
+		}
+		if(spriteCounter > 25) {
+			spriteNum = 1;
+			spriteCounter = 0;
+			atking = false;
+		}
+		
+	}
+	
 	//interactions with objects
 	public void pickUpObject(int i) {
 		
@@ -165,13 +232,17 @@ public class Player extends Entity{
 	}
 	
 	public void interactNPC(int i) {
-		if (i != 999) {
-			
-			if(gp.keyH.ePressed){
+		
+		if(gp.keyH.ePressed == true) {
+			if (i != 999) {
 				gp.gameState = gp.dialogueState;
 				gp.npc[i].speak();
 			}
+			else {
+				atking = true;
+			}
 		}
+		
 	}
 	
 	public void contactMonster(int i) {
@@ -184,45 +255,73 @@ public class Player extends Entity{
 		}
 	}
 	
+	public void dmgMonster(int i) {
+		
+		if(i != 999) {
+			if(gp.mon[i].invincible == false) {
+				gp.mon[i].life-=1;
+				gp.mon[i].invincible = true;
+				
+				if(gp.mon[i].life <= 0) {
+					gp.mon[i] = null;
+				}
+			}
+		}
+	}
+	
 	public void draw(Graphics2D g2) {
 		
 		//g2.setColor(Color.white);
 		//g2.fillRect(x, y, gp.tileSize, gp.tileSize);
 		
 		BufferedImage image = null;
+		//temporary variables used for attacking up and attacking left
+		//so that the character image does not slide
+		int tempScreenX = screenX;
+		int tempScreenY = screenY;
 		
-		//image based on direction, switches for movement
+		//image based on direction, switches for movement and attacking
 		switch(direction) {
 		case "up":
-			if(spriteNum == 1) {
-				image = up1;
+			if(atking == false) {
+				if(spriteNum == 1) {image = up1;}
+				if(spriteNum == 2) {image = up2;}
 			}
-			if(spriteNum == 2) {
-				image = up2;
+			if(atking == true) {
+				tempScreenY  = screenY-gp.tileSize;
+				if(spriteNum == 1) {image = atkUp1;}
+				if(spriteNum == 2) {image = atkUp2;}
 			}
 			break;
 		case "down":
-			if(spriteNum == 1) {
-				image = down1;
+			if(atking == false) {
+				if(spriteNum == 1) {image = down1;}
+				if(spriteNum == 2) {image = down2;}
 			}
-			if(spriteNum == 2) {
-				image = down2;
+			if(atking == true) {
+				if(spriteNum == 1) {image = atkDown1;}
+				if(spriteNum == 2) {image = atkDown2;}
 			}
 			break;
 		case "left":
-			if(spriteNum == 1) {
-				image = left1;
+			if(atking == false) {
+				if(spriteNum == 1) {image = left1;}
+				if(spriteNum == 2) {image = left2;}
 			}
-			if(spriteNum == 2) {
-				image = left2;
+			if(atking == true) {
+				tempScreenX = screenX - gp.tileSize;
+				if(spriteNum == 1) {image = atkLeft1;}
+				if(spriteNum == 2) {image = atkLeft2;}
 			}
 			break;
 		case "right":
-			if(spriteNum == 1) {
-				image = right1;
+			if(atking == false) {
+				if(spriteNum == 1) {image = right1;}
+				if(spriteNum == 2) {image = right2;}
 			}
-			if(spriteNum == 2) {
-				image = right2;
+			if(atking == true) {
+				if(spriteNum == 1) {image = atkRight1;}
+				if(spriteNum == 2) {image = atkRight2;}
 			}
 			break;
 		}
@@ -232,7 +331,7 @@ public class Player extends Entity{
 			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
 		}
 		
-		g2.drawImage(image, screenX, screenY, null);
+		g2.drawImage(image, tempScreenX, tempScreenY, null);
 
 		//reset opacity
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
