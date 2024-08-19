@@ -16,7 +16,7 @@ public class MON_GreenSlime extends Entity{
 		entityType = 2;
 		name = "Green Slime";
 		speed = 1;
-		maxLife = 4;
+		maxLife = 20;
 		life = maxLife;
 		
 		collisionArea.x = 3;
@@ -64,6 +64,14 @@ public class MON_GreenSlime extends Entity{
 			
 			actionLockCounter = 0;
 		}
+	}
+	
+	//runs away from the player
+	public void dmgReaction() {
+		
+		actionLockCounter = 0;
+		direction = gp.player.direction;
+		
 	}
 
 }

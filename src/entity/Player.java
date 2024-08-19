@@ -239,6 +239,7 @@ public class Player extends Entity{
 				gp.npc[i].speak();
 			}
 			else {
+				gp.playSoundEffect(7); //play swing sound effect
 				atking = true;
 			}
 		}
@@ -249,6 +250,7 @@ public class Player extends Entity{
 		if(i != 999) {
 			//player receives damage only when not invincible
 			if(invincible == false) {
+				gp.playSoundEffect(6); //damaged SE
 				life--;
 				invincible = true;
 			}
@@ -259,11 +261,13 @@ public class Player extends Entity{
 		
 		if(i != 999) {
 			if(gp.mon[i].invincible == false) {
+				gp.playSoundEffect(5); //hit monster SE
 				gp.mon[i].life-=1;
 				gp.mon[i].invincible = true;
+				gp.mon[i].dmgReaction();
 				
 				if(gp.mon[i].life <= 0) {
-					gp.mon[i] = null;
+					gp.mon[i].dying = true;
 				}
 			}
 		}
