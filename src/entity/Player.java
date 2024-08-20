@@ -6,10 +6,11 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-
+import java.util.ArrayList;
 
 import main.GamePanel;
 import main.KeyHandler;
+import object.OBJ_Key;
 import object.OBJ_Shield_Wood;
 import object.OBJ_Sword_Normal;
 
@@ -18,11 +19,12 @@ public class Player extends Entity{
 	
 	KeyHandler keyH;
 	
-	//indicate where the player is drawn on the screen
 	public final int screenX; 
 	public final int screenY;
 	int standCounter = 0;
 	public boolean atkCanceled = false;
+	public ArrayList<Entity> inventory = new ArrayList<Entity>();
+	public final int maxInventorySize = 20;
 	
 	public Player(GamePanel gp, KeyHandler keyH) {
 		
@@ -50,6 +52,7 @@ public class Player extends Entity{
 		setDefaultValues();
 		getPlayerImage();
 		getPlayerAtkImage();
+		setItems();
 	}
 	
 	public void setDefaultValues() {
@@ -76,6 +79,14 @@ public class Player extends Entity{
 		atk = getAtk(); //atk is decided by str and weapon
 		def = getDef(); //def is decided by dex and shield
 		
+	}
+	
+	public void setItems() {
+		
+		inventory.add(null);
+		inventory.add(currentWpn);
+		inventory.add(currentShield);
+		inventory.add(new OBJ_Key(gp));
 	}
 	
 	private int getDef() {
