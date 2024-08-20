@@ -8,7 +8,7 @@ public class KeyHandler implements KeyListener{
 
 	public boolean upPressed, downPressed, leftPressed, rightPressed, ePressed;
 	//DEBUG
-	boolean checkDrawTime = false;
+	boolean showDebugText = false;
 	
 	GamePanel gp;
 	
@@ -103,13 +103,17 @@ public class KeyHandler implements KeyListener{
 		
 		//DEBUG KEY
 		if(code == KeyEvent.VK_T) {
-			if(checkDrawTime == false) {
-				checkDrawTime = true;
+			if(showDebugText == false) {
+				showDebugText = true;
 			}
-			else if(checkDrawTime == true)
+			else if(showDebugText == true)
 			{
-				checkDrawTime = false;
+				showDebugText = false;
 			}
+		}
+		//refresh map
+		if(code == KeyEvent.VK_R) {
+			gp.tileM.loadMap("/maps/worldv2.txt");
 		}
 	}
 	

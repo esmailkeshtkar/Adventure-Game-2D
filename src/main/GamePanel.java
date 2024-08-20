@@ -3,6 +3,7 @@ package main;
 import java.awt.Color;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
@@ -189,7 +190,7 @@ public class GamePanel extends JPanel implements Runnable{
 		
 		//DEBUG FOR PERFORMANCE
 		long drawStart = 0;
-		if(keyH.checkDrawTime == true) {
+		if(keyH.showDebugText == true) {
 			drawStart = System.nanoTime();
 		}
 		
@@ -253,11 +254,21 @@ public class GamePanel extends JPanel implements Runnable{
 		}
 		
 		// DEBUG FOR PERFORMANCE
-		if(keyH.checkDrawTime == true) {
+		if(keyH.showDebugText == true) {
 			long drawEnd = System.nanoTime();
 			long passed = drawEnd - drawStart;
+			g2.setFont(g2.getFont().deriveFont(Font.PLAIN,32F));
 			g2.setColor(Color.white);
-			g2.drawString("Draw time :" +passed, 10, 400);
+			int x = 1000;
+			int y = 50;
+			int lineHeight = 36;
+			
+			g2.drawString("DEBUG PLAYER INFO", x, y); y+= lineHeight;
+			g2.drawString("World X is " +player.worldX, x, y); y+= lineHeight;
+			g2.drawString("World Y is " +player.worldY, x, y); y+= lineHeight;
+			g2.drawString("Col is " +(player.worldX + player.collisionArea.x)/tileSize, x, y); y+= lineHeight;
+			g2.drawString("Row is " +(player.worldY + player.collisionArea.y)/tileSize, x, y); y+= lineHeight;
+			g2.drawString("Draw time :" +passed, x, y);
 			System.out.println("Draw Time: " +passed);
 		}
 		

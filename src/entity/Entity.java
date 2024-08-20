@@ -108,7 +108,11 @@ public class Entity {
 			if(gp.player.invincible == false) {
 				//damage can be received
 				gp.playSoundEffect(6);
-				gp.player.life--;
+				
+				int dmg = atk - gp.player.def;
+				if(dmg < 0) { dmg = 0; }//so dmg does not go negative and heal
+				gp.player.life-=dmg;
+				
 				gp.player.invincible = true;
 			}
 		}

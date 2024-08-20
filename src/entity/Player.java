@@ -277,7 +277,11 @@ public class Player extends Entity{
 			//player receives damage only when not invincible
 			if(invincible == false) {
 				gp.playSoundEffect(6); //damaged SE
-				life--;
+				
+				int dmg = gp.mon[i].atk - def;
+				if(dmg < 0) { dmg = 0; }//so dmg does not go negative and heal
+				life-=dmg;
+				
 				invincible = true;
 			}
 		}
@@ -288,14 +292,38 @@ public class Player extends Entity{
 		if(i != 999) {
 			if(gp.mon[i].invincible == false) {
 				gp.playSoundEffect(5); //hit monster SE
-				gp.mon[i].life-=1;
+				
+				int dmg = atk - gp.mon[i].def;
+				if(dmg < 0) { dmg = 0; }//so dmg does not go negative and heal
+				gp.mon[i].life-= dmg;
+				gp.ui.addMsg("Dealt " + dmg + " dmg to the " + gp.mon[i].name+"!");
+				
 				gp.mon[i].invincible = true;
 				gp.mon[i].dmgReaction();
 				
 				if(gp.mon[i].life <= 0) {
 					gp.mon[i].dying = true;
+					gp.ui.addMsg("Defeated the "+gp.mon[i].name+"!");
+					gp.ui.addMsg("Obtained "+gp.mon[i].exp+" EXP!");
+					exp+= gp.mon[i].exp;
+					checkLvlUp();
 				}
 			}
+		}
+	}
+	
+	public void checkLvlUp() {
+		if(exp >= nextLvlExp) {
+			level++;
+			nextLvlExp *= 3;
+			maxLife += 2;
+			str++;
+			dex++;
+			atk = getAtk();
+			def = getDef();
+			gp.playSoundEffect(8);
+			gp.gameState = gp.dialogueState;
+			gp.ui.currentDialogue = "You leveled up! You are now level " +level+"!\n Your stats have increased!";
 		}
 	}
 	

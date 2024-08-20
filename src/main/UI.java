@@ -13,6 +13,10 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import entity.Entity;
 import object.OBJ_Heart;
 import object.OBJ_Key;
@@ -26,8 +30,11 @@ public class UI {
 	Font maruMonica, purisaB;
 	BufferedImage heart_full, heart_half, heart_blank;
 	public boolean messageOn = false;
-	public String message = "";
-	int messageCounter = 0; //how long the message will be displayed
+//	public String message = "";
+//	int messageCounter = 0; //how long the message will be displayed
+	ArrayList<String> msg = new ArrayList<>();
+	ArrayList<Integer> msgCounter = new ArrayList<>();
+
 	public boolean gameFinished = false;
 	public String currentDialogue = "";
 	public int commandNum = 0;
@@ -56,9 +63,13 @@ public class UI {
 
 	}
 	
-	public void showMessage(String text) {
-		message = text;
-		messageOn = true;
+	public void addMsg(String text) {
+//		message = text;
+//		messageOn = true;
+		
+		msg.add(text);
+		msgCounter.add(0);
+		
 	}
 	
 	public void draw(Graphics2D g2){
@@ -73,10 +84,10 @@ public class UI {
 		if(gp.gameState == gp.titleState) {
 			drawTitleScreen();
 		}else {
-			drawPlayerLife();
 			//PLAY STATE
 			if(gp.gameState == gp.playState) {
-				//Do playstate stuff later
+				drawPlayerLife();
+				drawMsg();
 			}
 			//PAUSE STATE
 			if(gp.gameState == gp.pauseState) {
@@ -122,6 +133,36 @@ public class UI {
 			}
 			i++;
 			x+=gp.tileSize;
+		}
+		
+	}
+	
+	public void drawMsg() {
+		
+		int msgX = gp.tileSize/2;
+		int msgY = gp.tileSize*5;
+		
+		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 32F));
+		
+		for(int i = 0; i < msg.size(); i++) {
+			
+			if(msg.get(i) != null) {
+				g2.setColor(Color.black);
+				g2.drawString(msg.get(i), msgX+3, msgY+3);
+				g2.setColor(Color.white);
+				g2.drawString(msg.get(i), msgX, msgY);
+				
+				//set counter += 1
+				int counter = msgCounter.get(i)+1;
+				msgCounter.set(i, counter);
+				msgY+= 50;
+				
+				if(msgCounter.get(i) >= 180) {
+					msg.remove(i);
+					msgCounter.remove(i);
+				}
+			}
+			
 		}
 		
 	}

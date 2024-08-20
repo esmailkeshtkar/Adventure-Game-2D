@@ -32,13 +32,37 @@ public class AssetPlacer {
 	
 	public void setMonster() {
 		
-		gp.mon[0] = new MON_GreenSlime(gp);
-		gp.mon[0].worldX = gp.tileSize*23;
-		gp.mon[0].worldY = gp.tileSize*36;
+		int i = 0;
 		
-		gp.mon[1] = new MON_GreenSlime(gp);
-		gp.mon[1].worldX = gp.tileSize*23;
-		gp.mon[1].worldY = gp.tileSize*37;
+		gp.mon[i] = new MON_GreenSlime(gp);
+		gp.mon[i].worldX = gp.tileSize*23;
+		gp.mon[i].worldY = gp.tileSize*36;
+		i++;
+		
+		gp.mon[i] = new MON_GreenSlime(gp);
+		gp.mon[i].worldX = gp.tileSize*23;
+		gp.mon[i].worldY = gp.tileSize*37;
+		
+		gp.mon[i] = new MON_GreenSlime(gp);
+		gp.mon[i].worldX = gp.tileSize*23;
+		gp.mon[i].worldY = gp.tileSize*38;
+		i++;
+		
+		gp.mon[i] = new MON_GreenSlime(gp);
+		gp.mon[i].worldX = gp.tileSize*23;
+		gp.mon[i].worldY = gp.tileSize*39;
+		i++;
+		
+		gp.mon[i] = new MON_GreenSlime(gp);
+		gp.mon[i].worldX = gp.tileSize*23;
+		gp.mon[i].worldY = gp.tileSize*36;
+		i++;
+		
+		gp.mon[i] = new MON_GreenSlime(gp);
+		gp.mon[i].worldX = gp.tileSize*23;
+		gp.mon[i].worldY = gp.tileSize*40;
+		i++;
+		
 		
 //		gp.mon[0] = new MON_GreenSlime(gp);
 //		gp.mon[0].worldX = gp.tileSize*11;

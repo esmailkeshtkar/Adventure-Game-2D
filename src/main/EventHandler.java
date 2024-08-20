@@ -107,6 +107,7 @@ public class EventHandler {
 			gp.playSoundEffect(2);
 			gp.ui.currentDialogue = "You drink the water.\nYour health has been restored.";
 			gp.player.life = gp.player.maxLife;
+			gp.aPlacer.setMonster();//respawns monsters
 		}
 	}
 	
