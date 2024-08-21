@@ -48,7 +48,7 @@ public class Entity {
 	int hpBarCounter = 0;
 	
 	//CHARACTER ATTRIBUTES
-	public int entityType; //0 = player, 1 = NPC, 2 = monster
+	
 	public String name;
 	public int maxLife, life;
 	public int speed;
@@ -56,7 +56,7 @@ public class Entity {
 	public int exp;
 	public int nextLvlExp;
 	public int str;
-	public int dex;
+	public int vit;
 	public int atk;
 	public int def;
 	public int coins;
@@ -67,6 +67,16 @@ public class Entity {
 	public int atkValue;
 	public int defValue;
 	public String description = "";
+	
+	//TYPE
+	public int type;
+	public final int type_player = 0;
+	public final int type_npc = 1;
+	public final int type_monster = 2;
+	public final int type_sword = 3;
+	public final int type_axe = 4;
+	public final int type_shield = 5;
+	public final int type_consumable = 6;
 	
 	public Entity(GamePanel gp) {
 		this.gp = gp;
@@ -93,6 +103,9 @@ public class Entity {
 		}
 	}
 	
+	public void use(Entity entity) {
+	}
+	
 	public void update() {
 		
 		setAction();
@@ -105,7 +118,7 @@ public class Entity {
 		boolean contactPlayer = gp.cDetector.checkPlayer(this);
 		
 		//if monster is contacting player
-		if(this.entityType == 2 && contactPlayer == true) {
+		if(this.type == type_monster && contactPlayer == true) {
 			if(gp.player.invincible == false) {
 				//damage can be received
 				gp.playSoundEffect(6);
@@ -193,7 +206,7 @@ public class Entity {
 			}
 			
 			//displays monster's HP bar when attacked for up 10 seconds
-			if(entityType == 2 && hpBarOn == true) {
+			if(type == 2 && hpBarOn == true) {
 				double oneScale = (double)gp.tileSize/maxLife;
 				double hpValue = oneScale*life;
 				

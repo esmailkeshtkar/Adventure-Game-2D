@@ -344,9 +344,9 @@ public class UI {
 		g2.drawString(value, textXLeft, textY);
 		textY+=lineHeight;
 		
-		//Dexterity
-		g2.drawString("Dex", textXRight, textY);
-		value = String.valueOf(gp.player.dex);
+		//Vitality
+		g2.drawString("Vitality", textXRight, textY);
+		value = String.valueOf(gp.player.vit);
 		textXLeft = getXforAlignRight(value, tailX);
 		g2.drawString(value, textXLeft, textY);
 		textY+=lineHeight;
@@ -423,6 +423,14 @@ public class UI {
 		
 		//DRAW PLAYER INVENTORY ITEMS
 		for(int i = 1; i < gp.player.inventory.size(); i++)	{
+			
+			//EQUIP CURSOR
+			if(gp.player.inventory.get(i) == gp.player.currentWpn || 
+			gp.player.inventory.get(i) == gp.player.currentShield) {
+				g2.setColor(Color.green);
+				g2.fillRoundRect(slotX, slotY, gp.tileSize, gp.tileSize, 10, 10);
+			}
+			
 			g2.drawImage(gp.player.inventory.get(i).down1, slotX, slotY, null);
 			slotX+=slotSize;
 			if(i % 5 == 0) {
@@ -437,7 +445,7 @@ public class UI {
 		int cursorWidth = gp.tileSize;
 		int cursorHeight = gp.tileSize;
 		//DRAW CURSOR
-		g2.setColor(Color.green);
+		g2.setColor(Color.white);
 		g2.setStroke(new BasicStroke(gp.scale));
 		g2.drawRoundRect(cursorX, cursorY, cursorWidth, cursorHeight, gp.tileSize/5, gp.tileSize/5);
 		
@@ -446,7 +454,7 @@ public class UI {
 		int dFrameY = frameY + frameHeight;
 		int dFrameWidth = frameWidth;
 		int dFrameHeight = gp.tileSize*3;
-		drawSubWindow(dFrameX, dFrameY, dFrameWidth, dFrameHeight);
+		
 		//DRAW DESCRIPTION TXT
 		int textX = dFrameX + gp.tileSize/4;
 		int textY = dFrameY + gp.tileSize/2+gp.scale*4;
@@ -455,6 +463,7 @@ public class UI {
 		
 		//DESCRIPTION OF CURRENTLY SELECTED ITEM
 		if(itemIndex < gp.player.inventory.size()) {
+			drawSubWindow(dFrameX, dFrameY, dFrameWidth, dFrameHeight);
 			for(String line: gp.player.inventory.get(itemIndex).description.split("\n")) {
 				g2.drawString(line, textX, textY);
 				textY+=gp.tileSize/2;

@@ -46,9 +46,6 @@ public class Player extends Entity{
 		collisionArea.width = 48;//width of collision area
 		collisionArea.height = 32;//height of collision area
 		
-		atkArea.width = gp.tileSize-2*gp.originalTileSize;
-		atkArea.height = gp.tileSize-2*gp.originalTileSize;
-		
 		setDefaultValues();
 		getPlayerImage();
 		getPlayerAtkImage();
@@ -70,14 +67,14 @@ public class Player extends Entity{
 		life = maxLife;
 		level = 1;
 		str = 1; //more str = more damage dealt
-		dex = 1; //more dex = less dmg taken
+		vit = 1; //more dex = less dmg taken
 		exp = 0;
 		nextLvlExp = 5;
 		coins = 0;
 		currentWpn = new OBJ_Sword_Normal(gp);
 		currentShield = new OBJ_Shield_Wood(gp);
 		atk = getAtk(); //atk is decided by str and weapon
-		def = getDef(); //def is decided by dex and shield
+		def = getDef(); //def is decided by vit and shield
 		
 	}
 	
@@ -90,10 +87,11 @@ public class Player extends Entity{
 	}
 	
 	private int getDef() {
-		return dex * currentShield.defValue;
+		return vit * currentShield.defValue;
 	}
 
 	private int getAtk() {
+		atkArea = currentWpn.atkArea;
 		return str*currentWpn.atkValue;
 	}
 
@@ -112,14 +110,27 @@ public class Player extends Entity{
 	
 	public void getPlayerAtkImage() {
 		
-		atkUp1 = setup("/player/boy_attack_up_1", gp.tileSize, gp.tileSize*2);
-		atkUp2 = setup("/player/boy_attack_up_2", gp.tileSize, gp.tileSize*2);
-		atkDown1 = setup("/player/boy_attack_down_1", gp.tileSize, gp.tileSize*2);
-		atkDown2 = setup("/player/boy_attack_down_2", gp.tileSize, gp.tileSize*2);
-		atkLeft1 = setup("/player/boy_attack_left_1", gp.tileSize*2, gp.tileSize);
-		atkLeft2 = setup("/player/boy_attack_left_2", gp.tileSize*2, gp.tileSize);
-		atkRight1 = setup("/player/boy_attack_right_1", gp.tileSize*2, gp.tileSize);
-		atkRight2 = setup("/player/boy_attack_right_2", gp.tileSize*2, gp.tileSize);
+		if(currentWpn.type == type_sword) {
+			atkUp1 = setup("/player/boy_attack_up_1", gp.tileSize, gp.tileSize*2);
+			atkUp2 = setup("/player/boy_attack_up_2", gp.tileSize, gp.tileSize*2);
+			atkDown1 = setup("/player/boy_attack_down_1", gp.tileSize, gp.tileSize*2);
+			atkDown2 = setup("/player/boy_attack_down_2", gp.tileSize, gp.tileSize*2);
+			atkLeft1 = setup("/player/boy_attack_left_1", gp.tileSize*2, gp.tileSize);
+			atkLeft2 = setup("/player/boy_attack_left_2", gp.tileSize*2, gp.tileSize);
+			atkRight1 = setup("/player/boy_attack_right_1", gp.tileSize*2, gp.tileSize);
+			atkRight2 = setup("/player/boy_attack_right_2", gp.tileSize*2, gp.tileSize);
+		}
+		
+		if(currentWpn.type == type_axe) {
+			atkUp1 = setup("/player/boy_axe_up_1", gp.tileSize, gp.tileSize*2);
+			atkUp2 = setup("/player/boy_axe_up_2", gp.tileSize, gp.tileSize*2);
+			atkDown1 = setup("/player/boy_axe_down_1", gp.tileSize, gp.tileSize*2);
+			atkDown2 = setup("/player/boy_axe_down_2", gp.tileSize, gp.tileSize*2);
+			atkLeft1 = setup("/player/boy_axe_left_1", gp.tileSize*2, gp.tileSize);
+			atkLeft2 = setup("/player/boy_axe_left_2", gp.tileSize*2, gp.tileSize);
+			atkRight1 = setup("/player/boy_axe_right_1", gp.tileSize*2, gp.tileSize);
+			atkRight2 = setup("/player/boy_axe_right_2", gp.tileSize*2, gp.tileSize);
+		}
 	}
 	
 	public void update() {
@@ -268,6 +279,18 @@ public class Player extends Entity{
 		
 		if(i != 999) {
 			
+			String txt;
+			
+			if(inventory.size() <= maxInventorySize) {
+				inventory.add(gp.obj[i]);
+				gp.playSoundEffect(1);
+				txt = "Obtained a "+gp.obj[i].name+"!";
+			}
+			else {
+				txt = "Your inventory is full!";
+			}
+			gp.ui.addMsg(txt);
+			gp.obj[i] = null;
 		}
 	}
 	
@@ -329,12 +352,36 @@ public class Player extends Entity{
 			nextLvlExp *= 3;
 			maxLife += 2;
 			str++;
-			dex++;
+			vit++;
 			atk = getAtk();
 			def = getDef();
 			gp.playSoundEffect(8);
 			gp.gameState = gp.dialogueState;
 			gp.ui.currentDialogue = "You leveled up! You are now level " +level+"!\n Your stats have increased!";
+		}
+	}
+	
+	public void selectItem() {
+		
+		int itemIndex = gp.ui.getItemIndex();
+		
+		if(itemIndex < inventory.size()) {
+			
+			Entity selectedItem = inventory.get(itemIndex);
+			
+			if(selectedItem.type == type_sword || selectedItem.type == type_axe) {
+				currentWpn = selectedItem;
+				atk = getAtk();
+				getPlayerAtkImage();
+			}
+			if(selectedItem.type == type_shield) {
+				currentShield = selectedItem;
+				def = getDef();
+			}
+			if(selectedItem.type == type_consumable) {
+				selectedItem.use(this);
+				inventory.remove(itemIndex);
+			}
 		}
 	}
 	

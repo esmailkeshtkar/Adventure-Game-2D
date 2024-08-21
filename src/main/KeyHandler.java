@@ -150,6 +150,9 @@ public class KeyHandler implements KeyListener{
 			if(gp.ui.slotCol < 4) {gp.ui.slotCol++;}
 			gp.playSoundEffect(9);
 		}
+		if(code == KeyEvent.VK_E) {
+			gp.player.selectItem();
+		}
 
 	}
 
