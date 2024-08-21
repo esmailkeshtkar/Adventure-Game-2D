@@ -20,8 +20,8 @@ public class Entity {
 	//an image with an accessible buffer of image data, stores image files
 	public BufferedImage image, image2, image3;
 	public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2; 
-	public BufferedImage atkUp1, atkUp2, atkDown1, atkDown2, 
-	atkLeft1, atkLeft2, atkRight1, atkRight2;
+	public BufferedImage atkUp1, atkUp2, atkDown1, atkDown2, atkLeft1, atkLeft2, 
+	atkRight1, atkRight2;
 	public Rectangle collisionArea = new Rectangle(0, 0, 85, 85);
 	public Rectangle atkArea = new Rectangle(0, 0, 0, 0);
 	public int collisionAreaDefaultX, collisionAreaDefaultY;
@@ -38,6 +38,7 @@ public class Entity {
 	boolean atking = false;
 	public boolean alive = true;
 	public boolean dying = false;
+	public int shotAvailableCounter = 0;
 	boolean hpBarOn = false;
 	
 	//COUNTERS
@@ -51,22 +52,20 @@ public class Entity {
 	
 	public String name;
 	public int maxLife, life;
+	public int maxMana, mana;
 	public int speed;
-	public int level;
-	public int exp;
-	public int nextLvlExp;
-	public int str;
-	public int vit;
-	public int atk;
-	public int def;
+	public int level, exp, nextLvlExp;
+	public int str, vit;
+	public int atk, def;
 	public int coins;
 	public Entity currentWpn;
 	public Entity currentShield;
+	public Projectile projectile;
 	
 	// ITEM ATTRIBUTES
-	public int atkValue;
-	public int defValue;
+	public int atkValue, defValue;
 	public String description = "";
+	public int useCost; //cost to shoot projectile
 	
 	//TYPE
 	public int type;
@@ -256,7 +255,7 @@ public class Entity {
 			changeAlpha(g2, .2f);
 		}
 		
-		if(dyingCounter >= 160)	{ dying = false; alive = false; }
+		if(dyingCounter >= 160)	{ alive = false; }
 		
 	}
 	

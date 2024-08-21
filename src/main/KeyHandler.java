@@ -6,7 +6,7 @@ import java.awt.event.KeyListener;
 //user controls
 public class KeyHandler implements KeyListener{
 
-	public boolean upPressed, downPressed, leftPressed, rightPressed, ePressed;
+	public boolean upPressed, downPressed, leftPressed, rightPressed, ePressed, shotKeyPressed;
 	//DEBUG
 	boolean showDebugText = false;
 	
@@ -100,6 +100,9 @@ public class KeyHandler implements KeyListener{
 		if(code == KeyEvent.VK_C) {
 			gp.gameState = gp.characterState;
 		}
+		if(code == KeyEvent.VK_R) {
+			shotKeyPressed = true;
+		}
 		
 		//DEBUG KEY
 		if(code == KeyEvent.VK_T) {
@@ -174,6 +177,9 @@ public class KeyHandler implements KeyListener{
 		}
 		if(code == KeyEvent.VK_E) {
 			ePressed = false;
+		}
+		if(code == KeyEvent.VK_R) {
+			shotKeyPressed = false;
 		}
 	}
 

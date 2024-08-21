@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import main.GamePanel;
 import main.KeyHandler;
+import object.OBJ_Fireball;
 import object.OBJ_Key;
 import object.OBJ_Shield_Wood;
 import object.OBJ_Sword_Normal;
@@ -75,6 +76,7 @@ public class Player extends Entity{
 		currentShield = new OBJ_Shield_Wood(gp);
 		atk = getAtk(); //atk is decided by str and weapon
 		def = getDef(); //def is decided by vit and shield
+		projectile = new OBJ_Fireball(gp);
 		
 	}
 	
@@ -215,6 +217,17 @@ public class Player extends Entity{
 			}
 		}
 		
+		//projectile key pressed, launch projectile
+		if(gp.keyH.shotKeyPressed == true && projectile.alive == false && shotAvailableCounter == 30) {
+			
+			//SET DEFAULT COORDINATES AND DIRECTION FOR PROJECTILE
+			projectile.set(worldX, worldY, direction, true, this);
+			//ADD PROJECTILE TO ARRAYLIST
+			gp.projectileList.add(projectile);
+			gp.playSoundEffect(10);
+			shotAvailableCounter = 0;
+		}
+		
 		//Invincible Counter, the period of time the player is invincible after getting hit
 		if(invincible == true) {
 			invincibleCounter++;
@@ -222,6 +235,9 @@ public class Player extends Entity{
 				invincible = false;
 				invincibleCounter = 0;
 			}
+		}
+		if(shotAvailableCounter < 30) {
+			shotAvailableCounter++;
 		}
 		
 	}
@@ -258,7 +274,7 @@ public class Player extends Entity{
 			
 			//check monster collision with updated world x, y and collision area
 			int monIndex = gp.cDetector.checkEntity(this, gp.mon);
-			dmgMonster(monIndex);
+			dmgMonster(monIndex, atk);
 			
 			//after checking the collision, restore original variables
 			worldX = currentWorldX;
@@ -309,7 +325,7 @@ public class Player extends Entity{
 	public void contactMonster(int i) {
 		if(i != 999) {
 			//player receives damage only when not invincible
-			if(invincible == false) {
+			if(invincible == false && gp.mon[i].dying == false) {
 				gp.playSoundEffect(6); //damaged SE
 				
 				int dmg = gp.mon[i].atk - def;
@@ -321,7 +337,7 @@ public class Player extends Entity{
 		}
 	}
 	
-	public void dmgMonster(int i) {
+	public void dmgMonster(int i, int atk) {
 		
 		if(i != 999) {
 			if(gp.mon[i].invincible == false) {
