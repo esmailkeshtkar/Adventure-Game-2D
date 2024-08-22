@@ -12,6 +12,7 @@ import main.GamePanel;
 import main.KeyHandler;
 import object.OBJ_Fireball;
 import object.OBJ_Key;
+import object.OBJ_Rock;
 import object.OBJ_Shield_Wood;
 import object.OBJ_Sword_Normal;
 
@@ -64,8 +65,11 @@ public class Player extends Entity{
 		direction = "down";
 		
 		//PLAYER STATUS
-		maxLife = 6;
-		life = maxLife;
+		maxHealth = 6;
+		health = maxHealth;
+		maxMana = 4;
+		mana = maxMana;
+		ammo = 10;
 		level = 1;
 		str = 1; //more str = more damage dealt
 		vit = 1; //more dex = less dmg taken
@@ -218,10 +222,15 @@ public class Player extends Entity{
 		}
 		
 		//projectile key pressed, launch projectile
-		if(gp.keyH.shotKeyPressed == true && projectile.alive == false && shotAvailableCounter == 30) {
+		if(gp.keyH.shotKeyPressed == true && projectile.alive == false 
+		&& shotAvailableCounter == 30 && projectile.hasResource(this) == true) {
 			
 			//SET DEFAULT COORDINATES AND DIRECTION FOR PROJECTILE
 			projectile.set(worldX, worldY, direction, true, this);
+			
+			//SUBTRACT COST OF RESOURCE
+			projectile.useResource(this);
+			
 			//ADD PROJECTILE TO ARRAYLIST
 			gp.projectileList.add(projectile);
 			gp.playSoundEffect(10);
@@ -330,7 +339,7 @@ public class Player extends Entity{
 				
 				int dmg = gp.mon[i].atk - def;
 				if(dmg < 0) { dmg = 0; }//so dmg does not go negative and heal
-				life-=dmg;
+				health-=dmg;
 				
 				invincible = true;
 			}
@@ -345,13 +354,13 @@ public class Player extends Entity{
 				
 				int dmg = atk - gp.mon[i].def;
 				if(dmg < 0) { dmg = 0; }//so dmg does not go negative and heal
-				gp.mon[i].life-= dmg;
+				gp.mon[i].health-= dmg;
 				gp.ui.addMsg("Dealt " + dmg + " dmg to the " + gp.mon[i].name+"!");
 				
 				gp.mon[i].invincible = true;
 				gp.mon[i].dmgReaction();
 				
-				if(gp.mon[i].life <= 0) {
+				if(gp.mon[i].health <= 0) {
 					gp.mon[i].dying = true;
 					gp.ui.addMsg("Defeated the "+gp.mon[i].name+"!");
 					gp.ui.addMsg("Obtained "+gp.mon[i].exp+" EXP!");
@@ -366,7 +375,7 @@ public class Player extends Entity{
 		if(exp >= nextLvlExp) {
 			level++;
 			nextLvlExp *= 3;
-			maxLife += 2;
+			maxHealth += 2;
 			str++;
 			vit++;
 			atk = getAtk();

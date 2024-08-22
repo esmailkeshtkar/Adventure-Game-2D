@@ -18,7 +18,7 @@ public class Projectile extends Entity{
 		this.direction = direction;
 		this.alive = alive;
 		this.user = user;
-		this.life = this.maxLife;
+		this.health = this.maxHealth;
 	}
 	
 	public void update() {
@@ -32,7 +32,11 @@ public class Projectile extends Entity{
 			}
 		}
 		else {
-			
+			boolean contactPlayer = gp.cDetector.checkPlayer(this);
+			if(gp.player.invincible == false && contactPlayer == true) {
+				dmgPlayer(atk);
+				alive = false;
+			}
 		}
 		
 		switch(direction) {
@@ -43,8 +47,8 @@ public class Projectile extends Entity{
 		}
 		
 		//projectile has a max distance it can travel
-		life--;
-		if(life <= 0) {
+		health--;
+		if(health <= 0) {
 			alive = false;
 		}
 		
@@ -58,6 +62,15 @@ public class Projectile extends Entity{
 			}
 			spriteCounter = 0;
 		}
+	}
+	
+	public boolean hasResource(Entity user) {
+		
+		boolean haveResource = false;
+		return haveResource;
+	}
+
+	public void useResource(Entity user) {
 	}
 
 }

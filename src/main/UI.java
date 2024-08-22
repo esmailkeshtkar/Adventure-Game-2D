@@ -20,6 +20,7 @@ import java.util.Map;
 import entity.Entity;
 import object.OBJ_Heart;
 import object.OBJ_Key;
+import object.OBJ_ManaCrystal;
 
 
 //on screen user interface
@@ -28,7 +29,7 @@ public class UI {
 	GamePanel gp;
 	Graphics2D g2;
 	Font maruMonica, purisaB;
-	BufferedImage heart_full, heart_half, heart_blank;
+	BufferedImage heart_full, heart_half, heart_blank, crystal_full, crystal_blank;
 	public boolean messageOn = false;
 //	public String message = "";
 //	int messageCounter = 0; //how long the message will be displayed
@@ -62,6 +63,10 @@ public class UI {
 		heart_full = heart.image;
 		heart_half = heart.image2;
 		heart_blank = heart.image3;
+		
+		Entity crystal = new OBJ_ManaCrystal(gp);
+		crystal_full = crystal.image;
+		crystal_blank = crystal.image2;
 
 	}
 	
@@ -116,7 +121,7 @@ public class UI {
 		int i = 0;
 		
 		//DRAW MAX LIFE
-		while(i < gp.player.maxLife/2){
+		while(i < gp.player.maxHealth/2){
 			g2.drawImage(heart_blank,  x,  y,  null);
 			i++;
 			x+= gp.tileSize;
@@ -128,14 +133,33 @@ public class UI {
 		i = 0;
 		
 		//draw current life
-		while(i < gp.player.life){
+		while(i < gp.player.health){
 			g2.drawImage(heart_half,  x,  y,  null);
 			i++;
-			if(i < gp.player.life) {
+			if(i < gp.player.health) {
 				g2.drawImage(heart_full,  x,  y,  null);
 			}
 			i++;
 			x+=gp.tileSize;
+		}
+		
+		//DRAW MAX MANA
+		x = gp.tileSize/2;
+		y = gp.tileSize*3/2;
+		i = 0;
+		while(i < gp.player.maxMana) {
+			g2.drawImage(crystal_blank, x, y, null);
+			i++;
+			x+= gp.tileSize*2/3;
+		}
+		x = gp.tileSize/2;
+		y = gp.tileSize*3/2;
+		i = 0;
+		//DRAW CURRENT MANA
+		while(i < gp.player.mana) {
+			g2.drawImage(crystal_full, x, y, null);
+			i++;
+			x+= gp.tileSize*2/3;
 		}
 		
 	}
@@ -305,7 +329,7 @@ public class UI {
 		final int frameX = gp.tileSize;
 		final int frameY = gp.tileSize;
 		final int frameWidth = gp.tileSize*5;
-		final int frameHeight = gp.tileSize*10;
+		final int frameHeight = gp.tileSize*10+gp.tileSize/3;
 		drawSubWindow(frameX, frameY, frameWidth, frameHeight);
 		
 		// TEXT
@@ -331,8 +355,15 @@ public class UI {
 		textY+= lineHeight;
 		
 		//Life
-		g2.drawString("Life", textXRight, textY);
-		value = String.valueOf(gp.player.life + "/"+ gp.player.maxLife);
+		g2.drawString("Health", textXRight, textY);
+		value = String.valueOf(gp.player.health + "/"+ gp.player.maxHealth);
+		textXLeft = getXforAlignRight(value, tailX);
+		g2.drawString(value, textXLeft, textY);
+		textY+=lineHeight;
+		
+		//Mana
+		g2.drawString("Mana", textXRight, textY);
+		value = String.valueOf(gp.player.mana + "/"+ gp.player.maxMana);
 		textXLeft = getXforAlignRight(value, tailX);
 		g2.drawString(value, textXLeft, textY);
 		textY+=lineHeight;

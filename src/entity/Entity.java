@@ -51,8 +51,8 @@ public class Entity {
 	//CHARACTER ATTRIBUTES
 	
 	public String name;
-	public int maxLife, life;
-	public int maxMana, mana;
+	public int maxHealth, health;
+	public int maxMana, mana, ammo;
 	public int speed;
 	public int level, exp, nextLvlExp;
 	public int str, vit;
@@ -118,16 +118,7 @@ public class Entity {
 		
 		//if monster is contacting player
 		if(this.type == type_monster && contactPlayer == true) {
-			if(gp.player.invincible == false) {
-				//damage can be received
-				gp.playSoundEffect(6);
-				
-				int dmg = atk - gp.player.def;
-				if(dmg < 0) { dmg = 0; }//so dmg does not go negative and heal
-				gp.player.life-=dmg;
-				
-				gp.player.invincible = true;
-			}
+			dmgPlayer(atk);
 		}
 		
 		if(collisionOn == false) {
@@ -158,6 +149,22 @@ public class Entity {
 				invincible = false;
 				invincibleCounter = 0;
 			}
+		}
+		if(shotAvailableCounter < 30) {
+			shotAvailableCounter++;
+		}
+	}
+	
+	public void dmgPlayer(int atk) {
+		if(gp.player.invincible == false) {
+			//damage can be received
+			gp.playSoundEffect(6);
+			
+			int dmg = atk - gp.player.def;
+			if(dmg < 0) { dmg = 0; }//so dmg does not go negative and heal
+			gp.player.health-=dmg;
+			
+			gp.player.invincible = true;
 		}
 	}
 	
@@ -206,8 +213,8 @@ public class Entity {
 			
 			//displays monster's HP bar when attacked for up 10 seconds
 			if(type == 2 && hpBarOn == true) {
-				double oneScale = (double)gp.tileSize/maxLife;
-				double hpValue = oneScale*life;
+				double oneScale = (double)gp.tileSize/maxHealth;
+				double hpValue = oneScale*health;
 				
 				g2.setColor(new Color(35,35,35));
 				g2.fillRect(screenX, screenY - gp.tileSize/10, gp.tileSize, gp.tileSize/6);

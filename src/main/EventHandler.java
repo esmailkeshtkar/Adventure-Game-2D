@@ -93,7 +93,7 @@ public class EventHandler {
 		gp.gameState = gameState;
 		gp.playSoundEffect(6);;
 		gp.ui.currentDialogue = "You fall into a pit!";
-		gp.player.life--;
+		gp.player.health--;
 		//eventRect[col][row].eventDone = true;
 		canTouchEvent = false;
 		
@@ -105,8 +105,9 @@ public class EventHandler {
 			gp.gameState = gameState;
 			gp.player.atkCanceled = true;
 			gp.playSoundEffect(2);
-			gp.ui.currentDialogue = "You drink the water.\nYour health has been restored.";
-			gp.player.life = gp.player.maxLife;
+			gp.ui.currentDialogue = "You drink the water.\nYour health and mana have been fully \nrestored.";
+			gp.player.health = gp.player.maxHealth;
+			gp.player.mana = gp.player.maxMana;
 			gp.aPlacer.setMonster();//respawns monsters
 		}
 	}
