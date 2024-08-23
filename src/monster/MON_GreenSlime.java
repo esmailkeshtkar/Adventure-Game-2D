@@ -4,6 +4,9 @@ import java.util.Random;
 
 import entity.Entity;
 import main.GamePanel;
+import object.OBJ_Coin_Bronze;
+import object.OBJ_Heart;
+import object.OBJ_ManaCrystal;
 import object.OBJ_Rock;
 
 public class MON_GreenSlime extends Entity{
@@ -84,7 +87,15 @@ public class MON_GreenSlime extends Entity{
 		
 		actionLockCounter = 0;
 		direction = gp.player.direction;
-		
+	}
+	
+	public void checkDrop(){
+		//RANDOM VALUE TO DETERMINE DROP
+		int i = new Random().nextInt(10)+1;
+		//SET ITEM DROP
+		if(i < 7) {dropItem(new OBJ_Coin_Bronze(gp));}
+		if(i>=7 && i < 9) {dropItem(new OBJ_Heart(gp));}
+		if(i>=9) {dropItem(new OBJ_ManaCrystal(gp));}
 	}
 
 }

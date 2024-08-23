@@ -245,10 +245,10 @@ public class Player extends Entity{
 				invincibleCounter = 0;
 			}
 		}
-		if(shotAvailableCounter < 30) {
-			shotAvailableCounter++;
-		}
 		
+		if(shotAvailableCounter < 30) {shotAvailableCounter++;}
+		if(health > maxHealth) {health = maxHealth;}
+		if(mana > maxMana) {mana = maxMana;}
 	}
 	
 	//attacking sprite counter
@@ -303,20 +303,27 @@ public class Player extends Entity{
 	public void pickUpObject(int i) {
 		
 		if(i != 999) {
-			
-			String txt;
-			
-			if(inventory.size() <= maxInventorySize) {
-				inventory.add(gp.obj[i]);
-				gp.playSoundEffect(1);
-				txt = "Obtained a "+gp.obj[i].name+"!";
+			//OBTAINABLE ITEMS
+			if(gp.obj[i].type == type_obtainable) {
+				gp.obj[i].use(this);
+				gp.obj[i] = null;
 			}
 			else {
-				txt = "Your inventory is full!";
+				String txt;
+				
+				if(inventory.size() <= maxInventorySize) {
+					inventory.add(gp.obj[i]);
+					gp.playSoundEffect(1);
+					txt = "Obtained a "+gp.obj[i].name+"!";
+				}
+				else {
+					txt = "Your inventory is full!";
+				}
+				gp.ui.addMsg(txt);
+				gp.obj[i] = null;
 			}
-			gp.ui.addMsg(txt);
-			gp.obj[i] = null;
 		}
+		//INVENTORY ITEMS
 	}
 	
 	public void interactNPC(int i) {

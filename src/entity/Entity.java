@@ -58,6 +58,7 @@ public class Entity {
 	public int str, vit;
 	public int atk, def;
 	public int coins;
+	public int value;
 	public Entity currentWpn;
 	public Entity currentShield;
 	public Projectile projectile;
@@ -76,6 +77,7 @@ public class Entity {
 	public final int type_axe = 4;
 	public final int type_shield = 5;
 	public final int type_consumable = 6;
+	public final int type_obtainable = 7;
 	
 	public Entity(GamePanel gp) {
 		this.gp = gp;
@@ -103,6 +105,21 @@ public class Entity {
 	}
 	
 	public void use(Entity entity) {
+	}
+	
+	public void checkDrop() {}
+	
+	public void dropItem(Entity item) {
+		
+		//dropped item drops where the enemy is defeated
+		for(int i = 0; i < gp.obj.length; i++) {
+			if(gp.obj[i] == null) {
+				gp.obj[i] = item;
+				gp.obj[i].worldX = worldX; //defeated enemy's worldX & worldY
+				gp.obj[i].worldY = worldY;
+				break;
+			}
+		}
 	}
 	
 	public void update() {
@@ -242,7 +259,7 @@ public class Entity {
 				dyingAnimation(g2);
 			}
 			
-			g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+			g2.drawImage(image, screenX, screenY, null);
 			
 			changeAlpha(g2, 1f);
 		}
@@ -287,5 +304,4 @@ public class Entity {
 		return image;
 	}
 
-	
 }
