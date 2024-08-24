@@ -12,6 +12,7 @@ import object.OBJ_Key;
 import object.OBJ_ManaCrystal;
 import object.OBJ_Potion_Red;
 import object.OBJ_Shield_Blue;
+import tile_interactive.IT_ChoppableTree;
 
 //places assets such as keys, doors, etc on map
 public class AssetPlacer {
@@ -64,7 +65,7 @@ public class AssetPlacer {
 		gp.obj[i].worldX = gp.tileSize*24;
 		gp.obj[i].worldY = gp.tileSize*27;
 		i++;
-		
+
 	}
 	
 	public void setNPC() {
@@ -111,7 +112,6 @@ public class AssetPlacer {
 		gp.mon[i].worldY = gp.tileSize*40;
 		i++;
 		
-		
 //		gp.mon[0] = new MON_GreenSlime(gp);
 //		gp.mon[0].worldX = gp.tileSize*11;
 //		gp.mon[0].worldY = gp.tileSize*10;
@@ -119,8 +119,11 @@ public class AssetPlacer {
 //		gp.mon[1] = new MON_GreenSlime(gp);
 //		gp.mon[1].worldX = gp.tileSize*11;
 //		gp.mon[1].worldY = gp.tileSize*11;
-		
-		
 	}
 	
+	public void setInteractiveTile() {
+		for(int i = 0; i < 7; i++) {
+			gp.iTile[i] = new IT_ChoppableTree(gp, 27+i,12);
+		}
+	}
 }

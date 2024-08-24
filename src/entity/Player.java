@@ -176,6 +176,9 @@ public class Player extends Entity{
 			int monIndex = gp.cDetector.checkEntity(this, gp.mon);
 			contactMonster(monIndex);
 			
+			//Check Interactive tile Collision
+			int iTileIndex = gp.cDetector.checkEntity(this, gp.iTile);
+			
 			//Check Event
 			gp.eHandler.checkEvent();
 			
@@ -248,6 +251,7 @@ public class Player extends Entity{
 		
 		if(shotAvailableCounter < 30) {shotAvailableCounter++;}
 		if(health > maxHealth) {health = maxHealth;}
+		if(health <= 0) {health=0;}
 		if(mana > maxMana) {mana = maxMana;}
 	}
 	
@@ -284,6 +288,9 @@ public class Player extends Entity{
 			//check monster collision with updated world x, y and collision area
 			int monIndex = gp.cDetector.checkEntity(this, gp.mon);
 			dmgMonster(monIndex, atk);
+			
+			int iTileIndex = gp.cDetector.checkEntity(this, gp.iTile);
+			dmgInteractiveTile(iTileIndex);
 			
 			//after checking the collision, restore original variables
 			worldX = currentWorldX;
@@ -374,6 +381,19 @@ public class Player extends Entity{
 					exp+= gp.mon[i].exp;
 					checkLvlUp();
 				}
+			}
+		}
+	}
+	
+	public void dmgInteractiveTile(int i) {
+		if(i != 999 && gp.iTile[i].destructible == true && gp.iTile[i].correctWpn(this) == true &&
+		gp.iTile[i].invincible == false) {
+			gp.iTile[i].playSoundEffect();
+			gp.iTile[i].health--;
+			gp.iTile[i].invincible = true;
+			
+			if(gp.iTile[i].health <= 0) {
+				gp.iTile[i] = gp.iTile[i].getDestroyedForm();
 			}
 		}
 	}

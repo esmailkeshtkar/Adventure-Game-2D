@@ -126,11 +126,13 @@ public class Entity {
 		
 		setAction();
 		
+		//check collisions
 		collisionOn = false;
 		gp.cDetector.checkTile(this);
 		gp.cDetector.checkObject(this, false);
 		gp.cDetector.checkEntity(this,  gp.npc);
 		gp.cDetector.checkEntity(this, gp.mon);
+		gp.cDetector.checkEntity(this, gp.iTile);
 		boolean contactPlayer = gp.cDetector.checkPlayer(this);
 		
 		//if monster is contacting player
