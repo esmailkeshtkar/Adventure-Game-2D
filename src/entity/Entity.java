@@ -40,6 +40,7 @@ public class Entity {
 	public boolean dying = false;
 	public int shotAvailableCounter = 0;
 	boolean hpBarOn = false;
+	public boolean interactiveTile = false;
 	
 	//COUNTERS
 	public int spriteCounter = 0;
@@ -120,6 +121,43 @@ public class Entity {
 				break;
 			}
 		}
+	}
+	
+	public Color getParticleColor() {
+		Color color = null;
+		return color;
+	}
+	
+	public int getParticleSize() {
+		int size = 0;
+		return size;
+	}
+	
+	public int getParticleSpeed() {
+		int speed = 0;
+		return speed;
+	}
+	
+	public int getParticleMaxHealth() {
+		int maxHealth = 0; //how long the particle lasts
+		return maxHealth;
+	}
+	
+	public void generateParticle(Entity generator, Entity target) {
+		
+		Color color = generator.getParticleColor();
+		int size = generator.getParticleSize();
+		int speed = generator.getParticleSpeed();
+		int maxHealth = generator.getParticleMaxHealth();
+		
+		Particle p1 = new Particle(gp, generator, color, size, speed, maxHealth, -2, -1);
+		Particle p2 = new Particle(gp, generator, color, size, speed, maxHealth, 2, -1);
+		Particle p3 = new Particle(gp, generator, color, size, speed, maxHealth, -2, 1);
+		Particle p4 = new Particle(gp, generator, color, size, speed, maxHealth, 2, 1);
+		gp.particleList.add(p1);
+		gp.particleList.add(p2);
+		gp.particleList.add(p3);
+		gp.particleList.add(p4);
 	}
 	
 	public void update() {
@@ -250,7 +288,7 @@ public class Entity {
 			}
 			
 			
-			if(invincible == true) {
+			if(invincible == true && type == type_monster) {
 				hpBarOn = true;
 				hpBarCounter = 0;
 				changeAlpha(g2, .4f);

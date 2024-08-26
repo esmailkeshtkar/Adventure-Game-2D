@@ -1,5 +1,7 @@
 package tile_interactive;
 
+import java.awt.Graphics2D;
+
 import entity.Entity;
 import main.GamePanel;
 
@@ -11,6 +13,7 @@ public class InteractiveTile extends Entity{
 	public InteractiveTile(GamePanel gp, int col, int row) {
 		super(gp);
 		this.gp = gp;
+		this.interactiveTile = true;
 	}
 	
 	public boolean correctWpn(Entity entity) {
