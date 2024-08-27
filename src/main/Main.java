@@ -14,6 +14,11 @@ public class Main {
 		GamePanel gamePanel = new GamePanel();
 		window.add(gamePanel);
 		
+		gamePanel.config.loadConfig();
+		if(gamePanel.fullScreenOn == true) {
+			//do later
+		}
+		
 		window.pack();
 		
 		window.setLocationRelativeTo(null); //sets window to center of the screen

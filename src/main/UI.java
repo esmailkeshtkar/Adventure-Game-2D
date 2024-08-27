@@ -631,6 +631,7 @@ public class UI {
 		g2.setColor(Color.WHITE);
 		g2.drawRect(textX, textY, gp.tileSize*2, gp.tileSize/2);
 		
+		gp.config.saveConfig();
 	}
 	
 	public void option_controls(int frameX, int frameY) {

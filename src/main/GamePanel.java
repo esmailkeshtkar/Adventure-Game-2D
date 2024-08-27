@@ -47,6 +47,7 @@ public class GamePanel extends JPanel implements Runnable{
 	public UI ui = new UI(this);
 	public EventHandler eHandler = new EventHandler(this);
 	Thread gameThread;
+	Config config = new Config(this);
 	
 	//player, entities, npcs, objects, monsters
 	public Player player = new Player(this, keyH);
