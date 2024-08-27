@@ -47,6 +47,10 @@ public class KeyHandler implements KeyListener{
 		else if(gp.gameState == gp.characterState) {
 			characterState(code);
 		}
+		
+		else if(gp.gameState == gp.optionState) {
+			optionState(code);
+		}
 	}
 	
 	public void titleState(int code) {
@@ -66,6 +70,7 @@ public class KeyHandler implements KeyListener{
 		
 		if(code == KeyEvent.VK_E) {
 			if(gp.ui.commandNum == 0) {
+				gp.playMusic(0);
 				gp.gameState = gp.playState;
 			}
 			else if (gp.ui.commandNum == 1) {
@@ -102,6 +107,10 @@ public class KeyHandler implements KeyListener{
 		}
 		if(code == KeyEvent.VK_R) {
 			shotKeyPressed = true;
+		}
+		//OPTION STATE
+		if(code == KeyEvent.VK_ESCAPE) {
+			gp.gameState = gp.optionState;
 		}
 		
 		//DEBUG KEY
@@ -157,6 +166,72 @@ public class KeyHandler implements KeyListener{
 			gp.player.selectItem();
 		}
 
+	}
+	
+	public void optionState(int code) {
+		//GET OUT OF OPTION STATE
+		if(code == KeyEvent.VK_ESCAPE) {
+			gp.gameState = gp.playState;
+		}
+		//ACCEPT KEY
+		if(code == KeyEvent.VK_E || code == KeyEvent.VK_ENTER) {
+			ePressed = true;
+		}
+		
+		int maxCommandNum = 0;
+		switch(gp.ui.substate) {
+			case 0: maxCommandNum = 5; break;
+			case 1: break;
+			case 2: maxCommandNum = 0; break;
+			case 3: maxCommandNum = 1; break;
+		}
+		
+		//navigate option menu with W and S
+		if(code == KeyEvent.VK_W) {
+			gp.ui.commandNum--;
+			gp.playSoundEffect(9);
+			if(gp.ui.commandNum < 0) {
+				gp.ui.commandNum = maxCommandNum;
+			}
+		}
+		if(code == KeyEvent.VK_S) {
+			gp.ui.commandNum++;
+			gp.playSoundEffect(9);
+			if(gp.ui.commandNum > maxCommandNum) {
+				gp.ui.commandNum = 0;
+			}
+		}
+		//LEFT AND RIGHT FOR VOLUME CONTROLS
+		if(code == KeyEvent.VK_A) {//decrease volume
+			if(gp.ui.substate == 0) {
+				//music
+				if(gp.ui.commandNum == 1 && gp.music.volumeScale > 0) {
+					gp.music.volumeScale--;
+					gp.music.checkVolume();
+					gp.playSoundEffect(9);
+				}
+				//sound effects
+				if(gp.ui.commandNum == 2 && gp.soundEffect.volumeScale > 0) {
+					gp.soundEffect.volumeScale--;
+					gp.playSoundEffect(9);
+				}
+			}
+		}
+		if(code == KeyEvent.VK_D) {//increase volume
+			if(gp.ui.substate == 0) {
+				//music
+				if(gp.ui.commandNum == 1 && gp.music.volumeScale < 5) {
+					gp.music.volumeScale++;
+					gp.music.checkVolume();
+					gp.playSoundEffect(9);
+				}
+				//sound effects
+				if(gp.ui.commandNum == 2 && gp.soundEffect.volumeScale < 5) {
+					gp.soundEffect.volumeScale++;
+					gp.playSoundEffect(9);
+				}
+			}
+		}
 	}
 
 	@Override

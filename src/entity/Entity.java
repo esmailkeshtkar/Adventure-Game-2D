@@ -150,10 +150,10 @@ public class Entity {
 		int speed = generator.getParticleSpeed();
 		int maxHealth = generator.getParticleMaxHealth();
 		
-		Particle p1 = new Particle(gp, generator, color, size, speed, maxHealth, -2, -1);
-		Particle p2 = new Particle(gp, generator, color, size, speed, maxHealth, 2, -1);
-		Particle p3 = new Particle(gp, generator, color, size, speed, maxHealth, -2, 1);
-		Particle p4 = new Particle(gp, generator, color, size, speed, maxHealth, 2, 1);
+		Particle p1 = new Particle(gp, target, color, size, speed, maxHealth, -2, -1);
+		Particle p2 = new Particle(gp, target, color, size, speed, maxHealth, 2, -1);
+		Particle p3 = new Particle(gp, target, color, size, speed, maxHealth, -2, 1);
+		Particle p4 = new Particle(gp, target, color, size, speed, maxHealth, 2, 1);
 		gp.particleList.add(p1);
 		gp.particleList.add(p2);
 		gp.particleList.add(p3);
