@@ -84,8 +84,18 @@ public class Player extends Entity{
 		
 	}
 	
+	public void restoreDefaults() {
+		worldX = gp.tileSize * 23;
+		worldY = gp.tileSize * 21;
+		direction="down";
+		health=maxHealth;
+		mana=maxMana;
+		invincible = false;
+	}
+	
 	public void setItems() {
 		
+		inventory.clear();
 		inventory.add(null);
 		inventory.add(currentWpn);
 		inventory.add(currentShield);
@@ -253,6 +263,11 @@ public class Player extends Entity{
 		if(health > maxHealth) {health = maxHealth;}
 		if(health <= 0) {health=0;}
 		if(mana > maxMana) {mana = maxMana;}
+		if(health <= 0) {
+			invincible = false;
+			gp.gameState = gp.gameOverState;
+			gp.playSoundEffect(12);
+		}
 	}
 	
 	//attacking sprite counter

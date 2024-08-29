@@ -67,6 +67,7 @@ public class GamePanel extends JPanel implements Runnable{
 	public final int dialogueState = 3;
 	public final int characterState = 4;
 	public final int optionState = 5;
+	public final int gameOverState = 6;
 	public boolean fullScreenOn = false;
 	
 	
@@ -84,8 +85,8 @@ public class GamePanel extends JPanel implements Runnable{
 		aPlacer.setNPC();
 		aPlacer.setMonster();
 		aPlacer.setInteractiveTile();
-		playMusic(0); //plays the bgm
-		stopMusic();
+		//playMusic(0); //plays the bgm
+		//stopMusic();
 		gameState = titleState; //game starts from the title
 		
 	}
@@ -95,6 +96,21 @@ public class GamePanel extends JPanel implements Runnable{
 		gameThread = new Thread(this);//passing Gamepanel to thread constructor
 		gameThread.start();
 		
+	}
+	
+	public void retry() {
+		player.setDefaultValues();
+		aPlacer.setNPC();
+		aPlacer.setMonster();
+	}
+	
+	public void restart() {
+		player.setDefaultValues();
+		player.setItems();
+		aPlacer.setObject();
+		aPlacer.setNPC();
+		aPlacer.setMonster();
+		aPlacer.setInteractiveTile();
 	}
 	
 	@Override
