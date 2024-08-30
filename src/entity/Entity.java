@@ -113,11 +113,11 @@ public class Entity {
 	public void dropItem(Entity item) {
 		
 		//dropped item drops where the enemy is defeated
-		for(int i = 0; i < gp.obj.length; i++) {
-			if(gp.obj[i] == null) {
-				gp.obj[i] = item;
-				gp.obj[i].worldX = worldX; //defeated enemy's worldX & worldY
-				gp.obj[i].worldY = worldY;
+		for(int i = 0; i < gp.obj[1].length; i++) {
+			if(gp.obj[gp.currentMap][i] == null) {
+				gp.obj[gp.currentMap][i] = item;
+				gp.obj[gp.currentMap][i].worldX = worldX; //defeated enemy's worldX & worldY
+				gp.obj[gp.currentMap][i].worldY = worldY;
 				break;
 			}
 		}
@@ -168,7 +168,7 @@ public class Entity {
 		collisionOn = false;
 		gp.cDetector.checkTile(this);
 		gp.cDetector.checkObject(this, false);
-		gp.cDetector.checkEntity(this,  gp.npc);
+		gp.cDetector.checkEntity(this, gp.npc);
 		gp.cDetector.checkEntity(this, gp.mon);
 		gp.cDetector.checkEntity(this, gp.iTile);
 		boolean contactPlayer = gp.cDetector.checkPlayer(this);

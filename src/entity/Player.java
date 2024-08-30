@@ -55,9 +55,11 @@ public class Player extends Entity{
 	}
 	
 	public void setDefaultValues() {
+		worldX = gp.tileSize * 10;
+		worldY = gp.tileSize * 41;
 		
-		worldX = gp.tileSize * 23;
-		worldY = gp.tileSize * 21;
+//		worldX = gp.tileSize * 23;
+//		worldY = gp.tileSize * 21;
 //		worldX = gp.tileSize * 10;
 //		worldY = gp.tileSize * 13;
 		
@@ -266,7 +268,9 @@ public class Player extends Entity{
 		if(health <= 0) {
 			invincible = false;
 			gp.gameState = gp.gameOverState;
+			gp.stopMusic();
 			gp.playSoundEffect(12);
+			gp.ui.commandNum = -1;
 		}
 	}
 	
@@ -326,23 +330,23 @@ public class Player extends Entity{
 		
 		if(i != 999) {
 			//OBTAINABLE ITEMS
-			if(gp.obj[i].type == type_obtainable) {
-				gp.obj[i].use(this);
-				gp.obj[i] = null;
+			if(gp.obj[gp.currentMap][i].type == type_obtainable) {
+				gp.obj[gp.currentMap][i].use(this);
+				gp.obj[gp.currentMap][i] = null;
 			}
 			else {
 				String txt;
 				
 				if(inventory.size() <= maxInventorySize) {
-					inventory.add(gp.obj[i]);
+					inventory.add(gp.obj[gp.currentMap][i]);
 					gp.playSoundEffect(1);
-					txt = "Obtained a "+gp.obj[i].name+"!";
+					txt = "Obtained a "+gp.obj[gp.currentMap][i].name+"!";
 				}
 				else {
 					txt = "Your inventory is full!";
 				}
 				gp.ui.addMsg(txt);
-				gp.obj[i] = null;
+				gp.obj[gp.currentMap][i] = null;
 			}
 		}
 		//INVENTORY ITEMS
@@ -354,7 +358,7 @@ public class Player extends Entity{
 			if (i != 999) {
 				atkCanceled = true;
 				gp.gameState = gp.dialogueState;
-				gp.npc[i].speak();
+				gp.npc[gp.currentMap][i].speak();
 			}
 		}
 		
@@ -363,10 +367,10 @@ public class Player extends Entity{
 	public void contactMonster(int i) {
 		if(i != 999) {
 			//player receives damage only when not invincible
-			if(invincible == false && gp.mon[i].dying == false) {
+			if(invincible == false && gp.mon[gp.currentMap][i].dying == false) {
 				gp.playSoundEffect(6); //damaged SE
 				
-				int dmg = gp.mon[i].atk - def;
+				int dmg = gp.mon[gp.currentMap][i].atk - def;
 				if(dmg < 0) { dmg = 0; }//so dmg does not go negative and heal
 				health-=dmg;
 				
@@ -378,22 +382,22 @@ public class Player extends Entity{
 	public void dmgMonster(int i, int atk) {
 		
 		if(i != 999) {
-			if(gp.mon[i].invincible == false) {
+			if(gp.mon[gp.currentMap][i].invincible == false) {
 				gp.playSoundEffect(5); //hit monster SE
 				
-				int dmg = atk - gp.mon[i].def;
+				int dmg = atk - gp.mon[gp.currentMap][i].def;
 				if(dmg < 0) { dmg = 0; }//so dmg does not go negative and heal
-				gp.mon[i].health-= dmg;
-				gp.ui.addMsg("Dealt " + dmg + " dmg to the " + gp.mon[i].name+"!");
+				gp.mon[gp.currentMap][i].health-= dmg;
+				gp.ui.addMsg("Dealt " + dmg + " dmg to the " + gp.mon[gp.currentMap][i].name+"!");
 				
-				gp.mon[i].invincible = true;
-				gp.mon[i].dmgReaction();
+				gp.mon[gp.currentMap][i].invincible = true;
+				gp.mon[gp.currentMap][i].dmgReaction();
 				
-				if(gp.mon[i].health <= 0) {
-					gp.mon[i].dying = true;
-					gp.ui.addMsg("Defeated the "+gp.mon[i].name+"!");
-					gp.ui.addMsg("Obtained "+gp.mon[i].exp+" EXP!");
-					exp+= gp.mon[i].exp;
+				if(gp.mon[gp.currentMap][i].health <= 0) {
+					gp.mon[gp.currentMap][i].dying = true;
+					gp.ui.addMsg("Defeated the "+gp.mon[gp.currentMap][i].name+"!");
+					gp.ui.addMsg("Obtained "+gp.mon[gp.currentMap][i].exp+" EXP!");
+					exp+= gp.mon[gp.currentMap][i].exp;
 					checkLvlUp();
 				}
 			}
@@ -401,17 +405,17 @@ public class Player extends Entity{
 	}
 	
 	public void dmgInteractiveTile(int i) {
-		if(i != 999 && gp.iTile[i].destructible == true && gp.iTile[i].correctWpn(this) == true &&
-		gp.iTile[i].invincible == false) {
-			gp.iTile[i].playSoundEffect();
-			gp.iTile[i].health--;
-			gp.iTile[i].invincible = true;
+		if(i != 999 && gp.iTile[gp.currentMap][i].destructible == true && gp.iTile[gp.currentMap][i].correctWpn(this) == true &&
+		gp.iTile[gp.currentMap][i].invincible == false) {
+			gp.iTile[gp.currentMap][i].playSoundEffect();
+			gp.iTile[gp.currentMap][i].health--;
+			gp.iTile[gp.currentMap][i].invincible = true;
 			
 			//Generate particle
-			generateParticle(gp.iTile[i], gp.iTile[i]);
+			generateParticle(gp.iTile[gp.currentMap][i], gp.iTile[gp.currentMap][i]);
 			
-			if(gp.iTile[i].health <= 0) {
-				gp.iTile[i] = gp.iTile[i].getDestroyedForm();
+			if(gp.iTile[gp.currentMap][i].health <= 0) {
+				gp.iTile[gp.currentMap][i] = gp.iTile[gp.currentMap][i].getDestroyedForm();
 			}
 		}
 	}

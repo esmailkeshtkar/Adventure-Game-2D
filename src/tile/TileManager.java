@@ -17,16 +17,17 @@ public class TileManager {
 
 	GamePanel gp;
 	public Tile[] tile; //A tile array that stores the different types of tiles
-	public int mapTileNum[][];//a 2D array for the row and column of each tile
+	public int mapTileNum[][][];//a 3D array, first dimension stores the map type, 2nd is x (column) and 3rd is y (row)
 	
 	public TileManager(GamePanel gp) {
 		this.gp = gp;
 		tile = new Tile[50]; //total number of tile types
 		
-		mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
+		mapTileNum = new int[gp.maxMap][gp.maxWorldCol][gp.maxWorldRow];
 		
 		getTileImage();
-		loadMap("/maps/worldv2.txt");
+		loadMap("/maps/worldv3.txt", 0);
+		loadMap("/maps/interior01.txt", 1);
 	}
 	
 	public void getTileImage() {
@@ -67,7 +68,9 @@ public class TileManager {
 		setup(39, "earth", false);
 		setup(40, "wall", true);
 		setup(41, "tree", true);
-		
+		setup(42, "hut", false);
+		setup(43, "floor01", false);
+		setup(44, "table01", true);
 		
 	}
 	
@@ -76,12 +79,10 @@ public class TileManager {
 		UtilityTool uTool = new UtilityTool();
 		
 		try {
-			
 			tile[index] = new Tile();
 			tile[index].image = ImageIO.read(getClass().getResourceAsStream("/tiles/" +imageName+".png"));
 			tile[index].image = uTool.scaleImage(tile[index].image, gp.tileSize, gp.tileSize);
 			tile[index].collision = collision;
-			
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
@@ -91,7 +92,7 @@ public class TileManager {
 	//adds the map tile type to the array
 	//map data is in a specified format
 	//i.e. 1 0 1 2 0 0 1 0 
-	public void loadMap(String filePath) {
+	public void loadMap(String filePath, int map) {
 		try {
 			InputStream is = getClass().getResourceAsStream(filePath);
 			BufferedReader br = new BufferedReader(new InputStreamReader(is)); //reads content of text file
@@ -108,7 +109,7 @@ public class TileManager {
 					String numbers[] = line.split(" ");
 					int num = Integer.parseInt(numbers[col]);
 					
-					mapTileNum[col][row] = num;
+					mapTileNum[map][col][row] = num;
 					col++;
 				}
 				
@@ -134,7 +135,7 @@ public class TileManager {
 		//draws the tile map
 		while(worldCol < gp.maxWorldCol && worldRow < gp.maxWorldRow) {
 			
-			int tileNum = mapTileNum[worldCol][worldRow];
+			int tileNum = mapTileNum[gp.currentMap][worldCol][worldRow];
 			
 			//WorldX/Y is the position on map
 			//ScreenX/Y is the position we draw
@@ -150,7 +151,6 @@ public class TileManager {
 			   worldY - 2*gp.tileSize < gp.player.worldY + gp.player.screenY){
 				
 				g2.drawImage(tile[tileNum].image, screenX, screenY, null);
-				
 			}
 			
 			worldCol++;

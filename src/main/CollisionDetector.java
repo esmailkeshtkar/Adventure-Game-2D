@@ -30,32 +30,32 @@ public class CollisionDetector {
 		switch(entity.direction) {
 		case "up":
 			entityTopRow = (entityTopWorldY - entity.speed)/gp.tileSize; //predict where player will be after the player will move to detect collision
-			tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityTopRow];
-			tileNum2 = gp.tileM.mapTileNum[entityRightCol][entityTopRow];
+			tileNum1 = gp.tileM.mapTileNum[gp.currentMap][entityLeftCol][entityTopRow];
+			tileNum2 = gp.tileM.mapTileNum[gp.currentMap][entityRightCol][entityTopRow];
 			if(gp.tileM.tile[tileNum1].collision == true || gp.tileM.tile[tileNum2].collision == true) {
 				entity.collisionOn = true;
 			}
 			break;
 		case "down":
 			entityBottomRow = (entityBottomWorldY + entity.speed)/gp.tileSize;
-			tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityBottomRow];
-			tileNum2 = gp.tileM.mapTileNum[entityRightCol][entityBottomRow];
+			tileNum1 = gp.tileM.mapTileNum[gp.currentMap][entityLeftCol][entityBottomRow];
+			tileNum2 = gp.tileM.mapTileNum[gp.currentMap][entityRightCol][entityBottomRow];
 			if(gp.tileM.tile[tileNum1].collision == true || gp.tileM.tile[tileNum2].collision == true) {
 				entity.collisionOn = true;
 			}
 			break;
 		case "left":
 			entityLeftCol = (entityLeftWorldX - entity.speed)/gp.tileSize; 
-			tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityTopRow];
-			tileNum2 = gp.tileM.mapTileNum[entityLeftCol][entityBottomRow];
+			tileNum1 = gp.tileM.mapTileNum[gp.currentMap][entityLeftCol][entityTopRow];
+			tileNum2 = gp.tileM.mapTileNum[gp.currentMap][entityLeftCol][entityBottomRow];
 			if(gp.tileM.tile[tileNum1].collision == true || gp.tileM.tile[tileNum2].collision == true) {
 				entity.collisionOn = true;
 			}
 			break;
 		case "right":
 			entityRightCol = (entityRightWorldX + entity.speed)/gp.tileSize;
-			tileNum1 = gp.tileM.mapTileNum[entityRightCol][entityTopRow];
-			tileNum2 = gp.tileM.mapTileNum[entityRightCol][entityBottomRow];
+			tileNum1 = gp.tileM.mapTileNum[gp.currentMap][entityRightCol][entityTopRow];
+			tileNum2 = gp.tileM.mapTileNum[gp.currentMap][entityRightCol][entityBottomRow];
 			if(gp.tileM.tile[tileNum1].collision == true || gp.tileM.tile[tileNum2].collision == true) {
 				entity.collisionOn = true;
 			}
@@ -68,16 +68,16 @@ public class CollisionDetector {
 		int index = 999;
 		
 		//scan object array
-		for(int i = 0; i < gp.obj.length; i++) {
+		for(int i = 0; i < gp.obj[1].length; i++) {
 			
-			if(gp.obj[i] != null) {
+			if(gp.obj[gp.currentMap][i] != null) {
 				//Get entity's collision area position
 				entity.collisionArea.x = entity.worldX + entity.collisionArea.x;
 				entity.collisionArea.y = entity.worldY + entity.collisionArea.y;
 				
 				//Get the object's collision area position
-				gp.obj[i].collisionArea.x  = gp.obj[i].worldX + gp.obj[i].collisionArea.x;
-				gp.obj[i].collisionArea.y = gp.obj[i].worldY + gp.obj[i].collisionArea.y;
+				gp.obj[gp.currentMap][i].collisionArea.x  = gp.obj[gp.currentMap][i].worldX + gp.obj[gp.currentMap][i].collisionArea.x;
+				gp.obj[gp.currentMap][i].collisionArea.y = gp.obj[gp.currentMap][i].worldY + gp.obj[gp.currentMap][i].collisionArea.y;
 				
 				//checks if objects are colliding
 				switch(entity.direction) {
@@ -90,8 +90,8 @@ public class CollisionDetector {
 				case "right":
 					entity.collisionArea.x += entity.speed; break;
 				}
-				if(entity.collisionArea.intersects(gp.obj[i].collisionArea)) {
-					if(gp.obj[i].collision == true) {
+				if(entity.collisionArea.intersects(gp.obj[gp.currentMap][i].collisionArea)) {
+					if(gp.obj[gp.currentMap][i].collision == true) {
 						entity.collisionOn = true;
 					}
 					if(player == true) {
@@ -102,8 +102,8 @@ public class CollisionDetector {
 				//reset collision area
 				entity.collisionArea.x = entity.collisionAreaDefaultX;
 				entity.collisionArea.y = entity.collisionAreaDefaultY;
-				gp.obj[i].collisionArea.x = gp.obj[i].collisionAreaDefaultX;
-				gp.obj[i].collisionArea.y = gp.obj[i].collisionAreaDefaultY;
+				gp.obj[gp.currentMap][i].collisionArea.x = gp.obj[gp.currentMap][i].collisionAreaDefaultX;
+				gp.obj[gp.currentMap][i].collisionArea.y = gp.obj[gp.currentMap][i].collisionAreaDefaultY;
 			}
 		}
 		
@@ -111,20 +111,20 @@ public class CollisionDetector {
 	}
 	
 	//check if player is colliding with NPC or Monster Collision
-	public int checkEntity(Entity entity, Entity[] target) {
+	public int checkEntity(Entity entity, Entity[][] target) {
 		int index = 999;
 		
 		//scan object array
-		for(int i = 0; i < target.length; i++) {
+		for(int i = 0; i < target[1].length; i++) {
 			
-			if(target[i] != null) {
+			if(target[gp.currentMap][i] != null) {
 				//Get entity's collision area position
 				entity.collisionArea.x = entity.worldX + entity.collisionArea.x;
 				entity.collisionArea.y = entity.worldY + entity.collisionArea.y;
 				
 				//Get the object's collision area position
-				target[i].collisionArea.x  = target[i].worldX + target[i].collisionArea.x;
-				target[i].collisionArea.y = target[i].worldY + target[i].collisionArea.y;
+				target[gp.currentMap][i].collisionArea.x  = target[gp.currentMap][i].worldX + target[gp.currentMap][i].collisionArea.x;
+				target[gp.currentMap][i].collisionArea.y = target[gp.currentMap][i].worldY + target[gp.currentMap][i].collisionArea.y;
 				
 				//checks if objects are colliding
 				switch(entity.direction) {
@@ -133,8 +133,8 @@ public class CollisionDetector {
 				case "left": entity.collisionArea.x -= entity.speed; break;
 				case "right": entity.collisionArea.x += entity.speed; break;
 				}
-				if(entity.collisionArea.intersects(target[i].collisionArea)) {
-					if(target[i] != entity) {
+				if(entity.collisionArea.intersects(target[gp.currentMap][i].collisionArea)) {
+					if(target[gp.currentMap][i] != entity) {
 						entity.collisionOn = true;
 						index = i;
 					}
@@ -143,8 +143,8 @@ public class CollisionDetector {
 				//reset collision area
 				entity.collisionArea.x = entity.collisionAreaDefaultX;
 				entity.collisionArea.y = entity.collisionAreaDefaultY;
-				target[i].collisionArea.x = target[i].collisionAreaDefaultX;
-				target[i].collisionArea.y = target[i].collisionAreaDefaultY;
+				target[gp.currentMap][i].collisionArea.x = target[gp.currentMap][i].collisionAreaDefaultX;
+				target[gp.currentMap][i].collisionArea.y = target[gp.currentMap][i].collisionAreaDefaultY;
 			}
 		}
 		

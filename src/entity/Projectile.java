@@ -28,7 +28,7 @@ public class Projectile extends Entity{
 			int monIndex = gp.cDetector.checkEntity(this, gp.mon);
 			if(monIndex != 999) {
 				gp.player.dmgMonster(monIndex, atk);
-				generateParticle(user.projectile, gp.mon[monIndex]);
+				generateParticle(user.projectile, gp.mon[gp.currentMap][monIndex]);
 				alive = false;
 			}
 		}

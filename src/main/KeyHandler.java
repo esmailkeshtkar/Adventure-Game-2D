@@ -127,11 +127,13 @@ public class KeyHandler implements KeyListener{
 			{
 				showDebugText = false;
 			}
+			//refresh map
+			switch(gp.currentMap) {
+			case 0: gp.tileM.loadMap("/maps/worldv3.txt", 0); break;
+			case 1: gp.tileM.loadMap("/maps/interior.txt", 0); break;
+			}
 		}
-		//refresh map
-		if(code == KeyEvent.VK_R) {
-			gp.tileM.loadMap("/maps/worldv2.txt");
-		}
+		
 	}
 	
 	public void pauseState(int code) {
@@ -252,11 +254,11 @@ public class KeyHandler implements KeyListener{
 			if(gp.ui.commandNum == 0) { //retry
 				gp.gameState = gp.playState;
 				gp.retry();
+				gp.playMusic(0);
 			}
 			else if(gp.ui.commandNum == 1) { //restart
 				gp.ui.commandNum = 0;
 				gp.gameState = gp.titleState;
-				gp.stopMusic();
 				gp.restart();
 			}
 		}
