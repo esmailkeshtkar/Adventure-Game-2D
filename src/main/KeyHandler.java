@@ -56,6 +56,10 @@ public class KeyHandler implements KeyListener{
 		else if(gp.gameState == gp.gameOverState){
 			gameOverState(code);
 		}
+		
+		else if(gp.gameState == gp.tradeState){
+			tradeState(code);
+		}
 	}
 	
 	public void titleState(int code) {
@@ -153,25 +157,7 @@ public class KeyHandler implements KeyListener{
 			gp.gameState = gp.playState;
 		}
 		//maneuver cursor around inventory screen
-		if(code == KeyEvent.VK_W) {
-			if(gp.ui.slotRow > 0) {gp.ui.slotRow--;}
-			gp.playSoundEffect(9);
-		}
-		if(code == KeyEvent.VK_A) {
-			if(gp.ui.slotCol > 0) {gp.ui.slotCol--;}
-			gp.playSoundEffect(9);
-		}
-		if(code == KeyEvent.VK_S) {
-			if(gp.ui.slotRow < 3) {gp.ui.slotRow++;}
-			gp.playSoundEffect(9);
-		}
-		if(code == KeyEvent.VK_D) {
-			if(gp.ui.slotCol < 4) {gp.ui.slotCol++;}
-			gp.playSoundEffect(9);
-		}
-		if(code == KeyEvent.VK_E) {
-			gp.player.selectItem();
-		}
+		playerInventory(code);
 
 	}
 	
@@ -261,6 +247,87 @@ public class KeyHandler implements KeyListener{
 				gp.gameState = gp.titleState;
 				gp.restart();
 			}
+		}
+	}
+	
+	public void tradeState(int code) {
+		if(code == KeyEvent.VK_E) {
+			ePressed = true;
+		}
+		
+		if(gp.ui.substate == 0) {
+			if(code == KeyEvent.VK_W) {
+				gp.ui.commandNum--;
+				if(gp.ui.commandNum < 0) {
+					gp.ui.commandNum = 2;
+				}
+				gp.playSoundEffect(9);
+			}
+			if(code == KeyEvent.VK_S) {
+				gp.ui.commandNum++;
+				if(gp.ui.commandNum > 2) {
+					gp.ui.commandNum = 0;
+				}
+				gp.playSoundEffect(9);
+			}
+		}
+		
+		if(gp.ui.substate == 1) {
+			npcInventory(code);
+			if(code == KeyEvent.VK_ESCAPE) {
+				gp.ui.substate = 0;
+			}
+		}
+		
+		if(gp.ui.substate == 2) {
+			playerInventory(code);
+			if(code == KeyEvent.VK_ESCAPE) {
+				gp.ui.substate = 0;
+			}
+		}
+	}
+	
+	public void playerInventory(int code) {
+		if(code == KeyEvent.VK_W) {
+			if(gp.ui.playerSlotRow > 0) {gp.ui.playerSlotRow--;}
+			gp.playSoundEffect(9);
+		}
+		if(code == KeyEvent.VK_A) {
+			if(gp.ui.playerSlotCol > 0) {gp.ui.playerSlotCol--;}
+			gp.playSoundEffect(9);
+		}
+		if(code == KeyEvent.VK_S) {
+			if(gp.ui.playerSlotRow < 3) {gp.ui.playerSlotRow++;}
+			gp.playSoundEffect(9);
+		}
+		if(code == KeyEvent.VK_D) {
+			if(gp.ui.playerSlotCol < 4) {gp.ui.playerSlotCol++;}
+			gp.playSoundEffect(9);
+		}
+		if(code == KeyEvent.VK_E) {
+			gp.player.selectItem();
+		}
+	}
+	
+	public void npcInventory(int code) {
+		if(code == KeyEvent.VK_W) {
+			if(gp.ui.npcSlotRow > 0) {gp.ui.npcSlotRow--;}
+			gp.playSoundEffect(9);
+		}
+		if(code == KeyEvent.VK_A) {
+			if(gp.ui.npcSlotCol > 0) {gp.ui.npcSlotCol--;}
+			gp.playSoundEffect(9);
+		}
+		if(code == KeyEvent.VK_S) {
+			if(gp.ui.npcSlotRow < 3) {gp.ui.npcSlotRow++;}
+			gp.playSoundEffect(9);
+		}
+		if(code == KeyEvent.VK_D) {
+			if(gp.ui.npcSlotCol < 4) {gp.ui.npcSlotCol++;}
+			gp.playSoundEffect(9);
+		}
+		if(code == KeyEvent.VK_E) {
+			gp.player.selectItem();
 		}
 	}
 

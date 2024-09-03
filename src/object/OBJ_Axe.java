@@ -14,7 +14,7 @@ public class OBJ_Axe extends Entity{
 		atkArea.width = gp.tileSize*1/2;
 		atkArea.height = gp.tileSize*1/2;
 		description = "["+name+"]\nAn old and worn axe.";
-		
+		price = 25;
 	}
 
 }

@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -65,9 +66,12 @@ public class Entity {
 	public Projectile projectile;
 	
 	// ITEM ATTRIBUTES
+	public ArrayList<Entity> inventory = new ArrayList<Entity>();
+	public final int maxInventorySize = 20;
 	public int atkValue, defValue;
 	public String description = "";
 	public int useCost; //cost to shoot projectile
+	public int price;
 	
 	//TYPE
 	public int type;
@@ -189,7 +193,7 @@ public class Entity {
 		
 		//used to alternate the sprite's for movement
 		spriteCounter++;
-		if(spriteCounter > 15)
+		if(spriteCounter > 24)
 		{
 			if(spriteNum == 1)
 			{

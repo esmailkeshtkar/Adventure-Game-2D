@@ -25,8 +25,7 @@ public class Player extends Entity{
 	public final int screenY;
 	int standCounter = 0;
 	public boolean atkCanceled = false;
-	public ArrayList<Entity> inventory = new ArrayList<Entity>();
-	public final int maxInventorySize = 20;
+	
 	
 	public Player(GamePanel gp, KeyHandler keyH) {
 		
@@ -77,7 +76,7 @@ public class Player extends Entity{
 		vit = 1; //more dex = less dmg taken
 		exp = 0;
 		nextLvlExp = 5;
-		coins = 0;
+		coins = 100;
 		currentWpn = new OBJ_Sword_Normal(gp);
 		currentShield = new OBJ_Shield_Wood(gp);
 		atk = getAtk(); //atk is decided by str and weapon
@@ -437,7 +436,7 @@ public class Player extends Entity{
 	
 	public void selectItem() {
 		
-		int itemIndex = gp.ui.getItemIndex();
+		int itemIndex = gp.ui.getItemIndex(gp.ui.playerSlotCol, gp.ui.playerSlotRow);
 		
 		if(itemIndex < inventory.size()) {
 			
