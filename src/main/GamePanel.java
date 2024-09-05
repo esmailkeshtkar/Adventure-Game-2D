@@ -12,6 +12,7 @@ import java.util.Comparator;
 
 import javax.swing.JPanel;
 
+import ai.PathFinder;
 import entity.Entity;
 import entity.Player;
 import tile.TileManager;
@@ -48,6 +49,7 @@ public class GamePanel extends JPanel implements Runnable{
 	public AssetPlacer aPlacer = new AssetPlacer(this);
 	public UI ui = new UI(this);
 	public EventHandler eHandler = new EventHandler(this);
+	public PathFinder pFinder = new PathFinder(this);
 	Thread gameThread;
 	Config config = new Config(this);
 	

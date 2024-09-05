@@ -49,36 +49,62 @@ public class MON_GreenSlime extends Entity{
 		right2 = setup("/monster/greenslime_down_1", gp.tileSize, gp.tileSize);
 	}
 	
+	public void update() {
+		super.update();
+		
+		int xDistance = Math.abs(worldX- gp.player.worldX);
+		int yDistance = Math.abs(worldY- gp.player.worldY);
+		int tileDistance = (xDistance+yDistance)/gp.tileSize;
+		
+		//check if player gets in aggro range
+		if(onPath == false && tileDistance < 5) {
+			int i = new Random().nextInt(100)+1;
+			if(i > 90) {
+				onPath = true;
+			}
+		}
+		
+		if(onPath == true && tileDistance > 20) {
+			onPath = false;
+		}
+	}
+	
 	public void setAction() {
 
 		//locks action for 120 frames or 2 seconds
-		actionLockCounter++;
-		if(actionLockCounter >= 120) {
-			//simple random AI for direction
-			Random random = new Random();
-			int i = random.nextInt(4)+1; //pick a number from 1 to 100
-			if(i == 1) {
-				direction = "up";
-			}
-			if(i == 2) {
-				direction = "down";
-			}
-			if(i == 3) {
-				direction = "left";
-			}
-			if(i == 4) {
-				direction = "right";
+		if(onPath == true) {
+			int endCol = (gp.player.worldX + gp.player.collisionArea.x)/gp.tileSize;
+			int endRow = (gp.player.worldY + gp.player.collisionArea.y)/gp.tileSize;
+			searchPath(endCol, endRow);
+
+			int i = new Random().nextInt(1000)+1;
+			if(i > 995 && projectile.alive == false && shotAvailableCounter == 30) {
+				projectile.set(worldX, worldY, direction, true,  this);
+				gp.projectileList.add(projectile);
+				shotAvailableCounter = 0;
 			}
 			
-			actionLockCounter = 0;
 		}
-		
-
-		int i = new Random().nextInt(100)+1;
-		if(i > 99 && projectile.alive == false && shotAvailableCounter == 30) {
-			projectile.set(worldX, worldY, direction, true,  this);
-			gp.projectileList.add(projectile);
-			shotAvailableCounter = 0;
+		else {
+			actionLockCounter++;
+			if(actionLockCounter >= 120) {
+				//simple random AI for direction
+				Random random = new Random();
+				int i = random.nextInt(4)+1; //pick a number from 1 to 100
+				if(i == 1) {
+					direction = "up";
+				}
+				if(i == 2) {
+					direction = "down";
+				}
+				if(i == 3) {
+					direction = "left";
+				}
+				if(i == 4) {
+					direction = "right";
+				}
+				actionLockCounter = 0;
+			}
 		}
 	}
 	
@@ -86,7 +112,7 @@ public class MON_GreenSlime extends Entity{
 	public void dmgReaction() {
 		
 		actionLockCounter = 0;
-		direction = gp.player.direction;
+		onPath = true;
 	}
 	
 	public void checkDrop(){

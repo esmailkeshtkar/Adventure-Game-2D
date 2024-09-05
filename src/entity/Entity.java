@@ -42,6 +42,7 @@ public class Entity {
 	public int shotAvailableCounter = 0;
 	boolean hpBarOn = false;
 	public boolean interactiveTile = false;
+	public boolean onPath = false;
 	
 	//COUNTERS
 	public int spriteCounter = 0;
@@ -164,10 +165,8 @@ public class Entity {
 		gp.particleList.add(p4);
 	}
 	
-	public void update() {
-		
-		setAction();
-		
+	public void checkCollision() {
+
 		//check collisions
 		collisionOn = false;
 		gp.cDetector.checkTile(this);
@@ -181,6 +180,12 @@ public class Entity {
 		if(this.type == type_monster && contactPlayer == true) {
 			dmgPlayer(atk);
 		}
+	}
+	
+	public void update() {
+		
+		setAction();
+		checkCollision();
 		
 		if(collisionOn == false) {
 			switch(direction) {
@@ -247,6 +252,8 @@ public class Entity {
 		int screenX = worldX - gp.player.worldX + gp.player.screenX; //screen position
 		int screenY = worldY - gp.player.worldY + gp.player.screenY; //screen position
 		
+		
+		
 		//boundary of the screen so that the whole map is not drawn at once
 		if(worldX + 2*gp.tileSize > gp.player.worldX - gp.player.screenX &&
 		   worldX - 2*gp.tileSize < gp.player.worldX + gp.player.screenX &&
@@ -308,6 +315,9 @@ public class Entity {
 			changeAlpha(g2, 1f);
 		}
 		
+		//draw collision rectangle
+		g2.setColor(Color.red);
+		g2.drawRect(screenX + collisionArea.x, screenY + collisionArea.y, collisionArea.width, collisionArea.height);
 	}
 	
 	
@@ -346,6 +356,78 @@ public class Entity {
 		}
 		
 		return image;
+	}
+	
+	public void searchPath(int endCol, int endRow) {
+		
+		int startCol = (worldX+collisionArea.x)/gp.tileSize;
+		int startRow = (worldY+collisionArea.y)/gp.tileSize;
+		
+		gp.pFinder.setNodes(startCol, startRow, endCol, endRow);
+		if(gp.pFinder.search() == true) {
+			
+			//Next WorldX & WorldY
+			int nextX = gp.pFinder.pathList.get(0).col*gp.tileSize;
+			int nextY = gp.pFinder.pathList.get(0).row*gp.tileSize;
+			
+			//Entity's collision area positions
+			int enLeftX = worldX+collisionArea.x;
+			int enRightX = worldX+collisionArea.x + collisionArea.width;
+			int enTopY = worldY+collisionArea.y;
+			int enBottomY = worldY+collisionArea.y + collisionArea.height;
+			
+			if(enTopY > nextY && enLeftX >= nextX && enRightX < nextX + gp.tileSize) {
+				direction = "up";
+			}
+			else if(enTopY < nextY && enLeftX >= nextX && enRightX < nextX + gp.tileSize) {
+				direction = "down";
+			}
+			else if(enTopY >= nextY && enBottomY < nextY + gp.tileSize) {
+				//direction is left or right
+				if(enLeftX > nextX) {
+					direction = "left";
+				}
+				if(enLeftX < nextX) {
+					direction = "right";
+				}
+			}
+			else if(enTopY > nextY && enLeftX > nextX) {
+				//direction is up or left
+				direction = "up";
+				checkCollision();
+				if(collisionOn == true) {
+					direction = "left";
+				}
+			}
+			else if(enTopY > nextY && enLeftX < nextX) {
+				//direction is up or right
+				direction = "up";
+				if(collisionOn == true) {
+					direction = "right";
+				}
+			}
+			else if(enTopY < nextY && enLeftX > nextX) {
+				//direction is down or left
+				direction = "down";
+				if(collisionOn == true) {
+					direction = "left";
+				}
+			}
+			else if(enTopY < nextY && enLeftX < nextX) {
+				//direction is down or right
+				direction = "down";
+				if(collisionOn == true) {
+					direction = "right";
+				}
+			}
+			
+			//when the entity reaches the end of the path, ends the pathfinder
+//			int nextCol = gp.pFinder.pathList.get(0).col;
+//			int nextRow = gp.pFinder.pathList.get(0).row;
+//			if(nextCol == endRow && nextRow == endRow) {
+//				onPath = false;
+//			}
+		}
 	}
 
 }

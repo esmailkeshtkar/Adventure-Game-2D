@@ -1,5 +1,6 @@
 package tile;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -18,6 +19,7 @@ public class TileManager {
 	GamePanel gp;
 	public Tile[] tile; //A tile array that stores the different types of tiles
 	public int mapTileNum[][][];//a 3D array, first dimension stores the map type, 2nd is x (column) and 3rd is y (row)
+	boolean drawPath = true; 
 	
 	public TileManager(GamePanel gp) {
 		this.gp = gp;
@@ -158,6 +160,19 @@ public class TileManager {
 			if(worldCol == gp.maxWorldCol) {
 				worldCol = 0;
 				worldRow++;
+			}
+		}
+		
+		//draw path
+		if(drawPath == true) {
+			g2.setColor(new Color(255, 0, 0, 70));
+			
+			for(int i = 0; i < gp.pFinder.pathList.size(); i++) {
+				int worldX = gp.pFinder.pathList.get(i).col*gp.tileSize;
+				int worldY = gp.pFinder.pathList.get(i).row*gp.tileSize;
+				int screenX = worldX - gp.player.worldX + gp.player.screenX; //screen position
+				int screenY = worldY - gp.player.worldY + gp.player.screenY; //screen position
+				g2.fillRect(screenX, screenY, gp.tileSize, gp.tileSize);
 			}
 		}
 	}

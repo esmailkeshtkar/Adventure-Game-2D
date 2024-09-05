@@ -113,12 +113,13 @@ public class CollisionDetector {
 	//check if player is colliding with NPC or Monster Collision
 	public int checkEntity(Entity entity, Entity[][] target) {
 		int index = 999;
-		
+
 		//scan object array
 		for(int i = 0; i < target[1].length; i++) {
 			
 			if(target[gp.currentMap][i] != null) {
 				//Get entity's collision area position
+				
 				entity.collisionArea.x = entity.worldX + entity.collisionArea.x;
 				entity.collisionArea.y = entity.worldY + entity.collisionArea.y;
 				
@@ -147,7 +148,6 @@ public class CollisionDetector {
 				target[gp.currentMap][i].collisionArea.y = target[gp.currentMap][i].collisionAreaDefaultY;
 			}
 		}
-		
 		return index;
 	}
 	
