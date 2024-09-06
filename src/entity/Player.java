@@ -61,8 +61,8 @@ public class Player extends Entity{
 		worldY = gp.tileSize * 21;
 //		worldX = gp.tileSize * 10;
 //		worldY = gp.tileSize * 13;
-		
-		speed = 6;//how many pixels the character moves per frame
+		defaultSpeed = 6;
+		speed = defaultSpeed;//how many pixels the character moves per frame
 		direction = "down";
 		
 		//PLAYER STATUS
@@ -246,7 +246,15 @@ public class Player extends Entity{
 			projectile.useResource(this);
 			
 			//ADD PROJECTILE TO ARRAYLIST
-			gp.projectileList.add(projectile);
+//			gp.projectileList.add(projectile);
+			
+			//CHECK VACANCY
+			for(int i = 0; i < gp.projectile[1].length; i++) {
+				if(gp.projectile[gp.currentMap][i] == null) {
+					gp.projectile[gp.currentMap][i] = projectile;
+					break;
+				}
+			}
 			gp.playSoundEffect(10);
 			shotAvailableCounter = 0;
 		}
@@ -309,6 +317,9 @@ public class Player extends Entity{
 			
 			int iTileIndex = gp.cDetector.checkEntity(this, gp.iTile);
 			dmgInteractiveTile(iTileIndex);
+			
+			int projectileIndex = gp.cDetector.checkEntity(this, gp.projectile);
+			dmgProjectile(projectileIndex);
 			
 			//after checking the collision, restore original variables
 			worldX = currentWorldX;
@@ -378,12 +389,19 @@ public class Player extends Entity{
 		}
 	}
 	
+	public void knockback(Entity entity, int knockbackStr) {
+		
+		entity.direction = direction;
+		entity.speed += knockbackStr;
+		entity.knockback = true;
+	}
+	
 	public void dmgMonster(int i, int atk) {
 		
 		if(i != 999) {
 			if(gp.mon[gp.currentMap][i].invincible == false) {
 				gp.playSoundEffect(5); //hit monster SE
-				
+				knockback(gp.mon[gp.currentMap][i], currentWpn.knockbackStr);
 				int dmg = atk - gp.mon[gp.currentMap][i].def;
 				if(dmg < 0) { dmg = 0; }//so dmg does not go negative and heal
 				gp.mon[gp.currentMap][i].health-= dmg;
@@ -419,7 +437,17 @@ public class Player extends Entity{
 		}
 	}
 	
+	public void dmgProjectile(int i) {
+		
+		if(i != 999) {
+			Entity projectile = gp.projectile[gp.currentMap][i];
+			projectile.alive = false;
+			generateParticle(projectile, projectile);
+		}
+	}
+	
 	public void checkLvlUp() {
+		
 		if(exp >= nextLvlExp) {
 			level++;
 			nextLvlExp *= 3;

@@ -15,7 +15,7 @@ public class OBJ_Sword_Normal extends Entity{
 		atkArea.width = gp.tileSize*2/3;
 		atkArea.height = gp.tileSize*2/3;
 		description = "[" +name + "]\nA normal weak sword.";
-		
+		knockbackStr = 3;
 	}
 
 }
