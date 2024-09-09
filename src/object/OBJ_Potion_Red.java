@@ -18,12 +18,13 @@ public class OBJ_Potion_Red extends Entity{
 		description = "["+name+"]\nA potion that restores \nhealth by "+value;
 	}
 	
-	public void use(Entity entity) {
+	public boolean use(Entity entity) {
 		gp.gameState = gp.dialogueState;
 		gp.ui.currentDialogue = "You drink the " +name +"\n"
 				+"You have recovered "+value+" health!";
 		entity.health+=value;
 		gp.playSoundEffect(2);
+		return true;
 	}
 
 }

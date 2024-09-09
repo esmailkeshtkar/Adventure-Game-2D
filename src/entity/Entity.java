@@ -88,9 +88,34 @@ public class Entity {
 	public final int type_shield = 5;
 	public final int type_consumable = 6;
 	public final int type_obtainable = 7;
+	public final int type_obstacle = 8;
 	
 	public Entity(GamePanel gp) {
 		this.gp = gp;
+	}
+	
+	public int getLeftX() {
+		return worldX+collisionArea.x;
+	}
+	
+	public int getRightX() {
+		return worldX+collisionArea.x+collisionArea.width;
+	}
+	
+	public int getTopY() {
+		return worldY+collisionArea.y;
+	}
+	
+	public int getBottomY() {
+		return worldY+collisionArea.y+collisionArea.height;
+	}
+	
+	public int getCol() {
+		return (worldX+collisionArea.x)/gp.tileSize;
+	}
+	
+	public int getRow() {
+		return (worldY+collisionArea.y)/gp.tileSize;
 	}
 	
 	public void setAction() {}
@@ -114,7 +139,10 @@ public class Entity {
 		}
 	}
 	
-	public void use(Entity entity) {
+	public void interact() {}
+	
+	public boolean use(Entity entity) {
+		return false;
 	}
 	
 	public void checkDrop() {}
@@ -453,6 +481,37 @@ public class Entity {
 //				onPath = false;
 //			}
 		}
+	}
+	
+	public int getDetected(Entity user, Entity target[][], String targetName) {
+		int index = 999;
+		
+		//Check surrounding object
+		int nextWorldX = user.getLeftX();
+		int nextWorldY = user.getTopY();
+		
+		switch(user.direction) {
+		case "up": nextWorldY = user.getTopY()-1; break;
+		case "down": nextWorldY = user.getBottomY()+1; break;
+		case "left": nextWorldY = user.getLeftX()-1; break;
+		case "rightt": nextWorldY = user.getRightX()+1; break;
+		}
+		
+		int col = nextWorldX/gp.tileSize;
+		int row = nextWorldY/gp.tileSize;
+		
+		//checks if object has same col and row as the user and the object matches
+		for(int i = 0; i < target[1].length; i++) {
+			if(target[gp.currentMap][i] != null &&
+			target[gp.currentMap][i].getCol() == col && 
+			target[gp.currentMap][i].getRow() == row &&
+			target[gp.currentMap][i].name.equals(targetName)){
+				index = i;
+				break;
+			}
+		}
+		
+		return index;
 	}
 
 }

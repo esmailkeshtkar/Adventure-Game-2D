@@ -24,10 +24,11 @@ public class OBJ_Heart extends Entity{
 		image3 = setup("/objects/heart_blank", gp.tileSize, gp.tileSize);
 	} 
 	
-	public void use(Entity entity) {
+	public boolean use(Entity entity) {
 		
 		gp.playSoundEffect(2);
 		gp.ui.addMsg("Restored "+value+" health.");
 		entity.health += value;
+		return true;
 	}
 }
