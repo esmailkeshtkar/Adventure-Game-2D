@@ -77,6 +77,8 @@ public class Entity {
 	public int useCost; //cost to shoot projectile
 	public int price;
 	public int knockbackStr = 0;
+	public boolean stackable = false;
+	public int stackAmount = 1;
 	
 	//TYPE
 	public int type;

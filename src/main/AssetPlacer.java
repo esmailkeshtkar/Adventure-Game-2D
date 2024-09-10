@@ -53,6 +53,11 @@ public class AssetPlacer {
 		gp.obj[mapNum][i].worldY = gp.tileSize*27;
 		i++;
 		
+		gp.obj[mapNum][i] = new OBJ_Potion_Red(gp);
+		gp.obj[mapNum][i].worldX = gp.tileSize*23;
+		gp.obj[mapNum][i].worldY = gp.tileSize*28;
+		i++;
+		
 		gp.obj[mapNum][i] = new OBJ_Heart(gp);
 		gp.obj[mapNum][i].worldX = gp.tileSize*23;
 		gp.obj[mapNum][i].worldY = gp.tileSize*27;

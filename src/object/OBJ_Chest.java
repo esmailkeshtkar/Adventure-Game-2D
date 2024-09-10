@@ -37,11 +37,10 @@ public class OBJ_Chest extends Entity{
 			gp.playSoundEffect(3);
 			StringBuilder sb = new StringBuilder();
 			sb.append("You open the chest and obtain a "+loot.name+"!");
-			if(gp.player.inventory.size() == gp.player.maxInventorySize) {
+			if(gp.player.canObtainItem(loot) == false) {
 				sb.append("\n...Your inventory is too full to carry this!");
 			}else {
 				sb.append("\nYou obtain "+loot.name);
-				gp.player.inventory.add(loot);
 				down1 = image2;
 				opened = true;
 			}
