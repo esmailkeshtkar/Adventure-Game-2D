@@ -57,6 +57,7 @@ public class KeyHandler implements KeyListener{
 			gameOverState(code);
 		}
 		
+		//TRADE STATE
 		else if(gp.gameState == gp.tradeState){
 			tradeState(code);
 		}
@@ -157,8 +158,12 @@ public class KeyHandler implements KeyListener{
 			gp.gameState = gp.playState;
 		}
 		//maneuver cursor around inventory screen
+	
+		if(code == KeyEvent.VK_E) {
+			gp.player.selectItem();
+		}
+		
 		playerInventory(code);
-
 	}
 	
 	public void optionState(int code) {
@@ -304,9 +309,6 @@ public class KeyHandler implements KeyListener{
 			if(gp.ui.playerSlotCol < 4) {gp.ui.playerSlotCol++;}
 			gp.playSoundEffect(9);
 		}
-		if(code == KeyEvent.VK_E) {
-			gp.player.selectItem();
-		}
 	}
 	
 	public void npcInventory(int code) {
@@ -325,9 +327,6 @@ public class KeyHandler implements KeyListener{
 		if(code == KeyEvent.VK_D) {
 			if(gp.ui.npcSlotCol < 4) {gp.ui.npcSlotCol++;}
 			gp.playSoundEffect(9);
-		}
-		if(code == KeyEvent.VK_E) {
-			gp.player.selectItem();
 		}
 	}
 

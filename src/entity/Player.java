@@ -76,7 +76,7 @@ public class Player extends Entity{
 		vit = 1; //more dex = less dmg taken
 		exp = 0;
 		nextLvlExp = 5;
-		coins = 100;
+		coins = 10000;
 		currentWpn = new OBJ_Sword_Normal(gp);
 		currentShield = new OBJ_Shield_Wood(gp);
 		atk = getAtk(); //atk is decided by str and weapon
