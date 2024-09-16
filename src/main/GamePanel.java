@@ -6,6 +6,9 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,6 +18,7 @@ import javax.swing.JPanel;
 import ai.PathFinder;
 import entity.Entity;
 import entity.Player;
+import environment.EnvironmentManager;
 import tile.TileManager;
 import tile_interactive.InteractiveTile;
 
@@ -37,6 +41,12 @@ public class GamePanel extends JPanel implements Runnable{
 	public final int maxMap = 10;
 	public int currentMap = 0;
 	
+	//FULL SCREEN SIZE
+	int screenWidth2 = screenWidth;
+	int screenHeight2 = screenHeight;
+	BufferedImage tempScreen;
+	Graphics2D g2;
+	
 	//FPS, the number of frames to be drawn per second
 	int FPS = 60;
 	
@@ -50,6 +60,7 @@ public class GamePanel extends JPanel implements Runnable{
 	public UI ui = new UI(this);
 	public EventHandler eHandler = new EventHandler(this);
 	public PathFinder pFinder = new PathFinder(this);
+	public EnvironmentManager eManager = new EnvironmentManager(this);
 	Thread gameThread;
 	Config config = new Config(this);
 	
@@ -93,11 +104,28 @@ public class GamePanel extends JPanel implements Runnable{
 		aPlacer.setNPC();
 		aPlacer.setMonster();
 		aPlacer.setInteractiveTile();
+		eManager.setup();
 		//playMusic(0); //plays the bgm
 		//stopMusic();
 		gameState = titleState; //game starts from the title
 		
+		//resize image to full screen monitor
+		tempScreen = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
+		g2 = (Graphics2D)tempScreen.getGraphics();
+		
+		if(fullScreenOn == true) {
+			setFullScreen();
+		}
 	}
+	
+	public void setFullScreen() {
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice gd = ge.getDefaultScreenDevice();
+        gd.setFullScreenWindow(Main.window);
+
+        screenWidth2 = Main.window.getWidth();
+        screenHeight2 = Main.window.getHeight();
+    }
 	
 	public void startGameThread() {
 		
@@ -173,7 +201,8 @@ public class GamePanel extends JPanel implements Runnable{
 			//every loop past time is added to delta, when delta reaches the draw interval we update and repaint and reset delta
 			if(delta >= 1){
 				update();
-				repaint();
+				drawToTempScreen();//draw everything to buffered image
+				drawToScreen(); //draw buffered image to screen
 				delta--;
 				drawCount++;
 			}
@@ -240,13 +269,7 @@ public class GamePanel extends JPanel implements Runnable{
 		
 	}
 	
-	//standard method to draw on JPanel
-	public void paintComponent(Graphics g) {
-		
-		super.paintComponent(g);
-		
-		Graphics2D g2 = (Graphics2D)g;
-		
+	public void drawToTempScreen() {
 		//DEBUG FOR PERFORMANCE
 		long drawStart = 0;
 		if(keyH.showDebugText == true) {
@@ -328,6 +351,9 @@ public class GamePanel extends JPanel implements Runnable{
 			//EMPTY ENTITY LIST
 			entityList.clear();
 			
+			//ENVIRONMENT
+			eManager.draw(g2);
+			
 			//DRAW UI
 			ui.draw(g2);
 		}
@@ -350,11 +376,12 @@ public class GamePanel extends JPanel implements Runnable{
 			g2.drawString("Draw time :" +passed, x, y);
 			System.out.println("Draw Time: " +passed);
 		}
-		
-		g2.dispose();
 	}
-	
-	
+
+	public void drawToScreen() {
+		Graphics g = getGraphics();
+		g.drawImage(tempScreen,  0,  0,  screenWidth2,  screenHeight2, null);
+	}
 	//music and SFX
 	public void playMusic(int i) {
 		
