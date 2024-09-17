@@ -25,7 +25,7 @@ public class Player extends Entity{
 	public final int screenY;
 	int standCounter = 0;
 	public boolean atkCanceled = false;
-	
+	public boolean lightUpdated;
 	
 	public Player(GamePanel gp, KeyHandler keyH) {
 		
@@ -148,6 +148,17 @@ public class Player extends Entity{
 			atkRight1 = setup("/player/boy_axe_right_1", gp.tileSize*2, gp.tileSize);
 			atkRight2 = setup("/player/boy_axe_right_2", gp.tileSize*2, gp.tileSize);
 		}
+	}
+	
+	public void getSleepingImage(BufferedImage image) {
+		up1 = image;
+		up2 = image;
+		down1 = image;
+		down2 = image;
+		left1 = image;
+		left2 = image;
+		right1 = image;
+		right2 = image;
 	}
 	
 	public void update() {
@@ -491,6 +502,14 @@ public class Player extends Entity{
 				}else {
 					inventory.remove(itemIndex);
 				}
+			}
+			if(selectedItem.type == type_light) {
+				if(currentLight == selectedItem) {
+					currentLight = null;
+				}else {
+					currentLight = selectedItem;
+				}
+				lightUpdated = true;
 			}
 		}
 	}

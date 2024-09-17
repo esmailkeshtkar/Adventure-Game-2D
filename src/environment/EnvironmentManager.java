@@ -7,7 +7,7 @@ import main.GamePanel;
 public class EnvironmentManager {
 	
 	GamePanel gp;
-	Lighting lighting;
+	public Lighting lighting;
 	
 	public EnvironmentManager(GamePanel gp) {
 		this.gp = gp;
@@ -15,7 +15,11 @@ public class EnvironmentManager {
 	
 	public void setup() {
 		
-		lighting = new Lighting(gp, 1000);
+		lighting = new Lighting(gp);
+	}
+	
+	public void update() {
+		lighting.update();
 	}
 	
 	public void draw(Graphics2D g2) {
