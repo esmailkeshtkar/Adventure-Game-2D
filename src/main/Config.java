@@ -20,7 +20,7 @@ public class Config {
 			BufferedWriter bw = new BufferedWriter(new FileWriter("config.txt"));
 			
 			//Full screen settings
-			bw.write(String.valueOf(gp.fullScreenOn));
+			bw.write(String.valueOf(gp.ui.tempFullScreenOn));
 			bw.newLine();
 			
 			//Music volume
@@ -47,6 +47,7 @@ public class Config {
 			
 			//Full screen 
 			gp.fullScreenOn = Boolean.parseBoolean(s);
+			gp.ui.tempFullScreenOn = gp.fullScreenOn;
 			
 			//Music volume
 			s = br.readLine();

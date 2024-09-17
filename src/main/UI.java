@@ -49,10 +49,10 @@ public class UI {
 	int substate = 0;
 	int counter = 0;
 	public Entity npc;
+	public boolean tempFullScreenOn;
 	
 	public UI(GamePanel gp) {
 		this.gp = gp;
-		
 		//import font types
 		try {
 			InputStream is = getClass().getResourceAsStream("/font/x12y16pxMaruMonica.ttf");
@@ -578,7 +578,7 @@ public class UI {
 		
 		switch(substate) {
 		case 0: option_top(frameX, frameY); break;
-		case 1: break;
+		case 1: option_fullScreenNotification(frameX, frameY); break;
 		case 2: option_controls(frameX, frameY); break;
 		case 3: option_endGameConfirm(frameX, frameY); break;
 		}
@@ -645,12 +645,13 @@ public class UI {
 		if(commandNum == 0) {
 			g2.drawString(">", textX-gp.tileSize/2, textY);
 			if(gp.keyH.ePressed == true) {
-				if(gp.fullScreenOn == true) {
-					gp.fullScreenOn = false;
+				if(tempFullScreenOn == true) {
+					tempFullScreenOn = false;
 				}
 				else {
-					gp.fullScreenOn = true;
+					tempFullScreenOn = true;
 				}
+				substate = 1;
 			}
 		}
 		
@@ -705,7 +706,7 @@ public class UI {
 		textX = frameX + (int)(gp.tileSize*5.5);
 		textY = frameY + gp.tileSize*2+gp.tileSize/2;
 		g2.setStroke(new BasicStroke(3));
-		if(gp.fullScreenOn == true) {
+		if(tempFullScreenOn == true) {
 			g2.setColor(Color.GREEN);
 			g2.fillRect(textX, textY, gp.tileSize/2, gp.tileSize/2);
 			g2.setColor(Color.WHITE);
@@ -732,6 +733,30 @@ public class UI {
 		
 		gp.config.saveConfig();
 	}
+	
+	public void option_fullScreenNotification(int frameX, int frameY) {
+        int textX = frameX + gp.tileSize;
+        int textY = frameY + gp.tileSize * 3;
+
+        currentDialogue = "The change will take \neffect after restarting \nthe game.";
+
+        for (String line : currentDialogue.split("\n")) {
+            g2.drawString(line, textX, textY);
+            textY += 40;
+        }
+
+        // BACK OPTION
+        textY = frameY + gp.tileSize * 9;
+        g2.drawString("Back", textX, textY);
+
+        if (commandNum == 0) {
+            g2.drawString(">", textX - 25, textY);
+
+            if (gp.keyH.ePressed == true) {
+                substate = 0;
+            }
+        }
+    }
 	
 	public void option_controls(int frameX, int frameY) {
 		int textX;

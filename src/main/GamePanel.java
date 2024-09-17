@@ -8,6 +8,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.Window;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -122,9 +123,9 @@ public class GamePanel extends JPanel implements Runnable{
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice gd = ge.getDefaultScreenDevice();
         gd.setFullScreenWindow(Main.window);
-
-        screenWidth2 = Main.window.getWidth();
-        screenHeight2 = Main.window.getHeight();
+        //maintain aspect ratio in full screen mode
+        screenHeight2 = Main.window.getHeight()-tileSize;
+        screenWidth2 = screenHeight*maxScreenCol/maxScreenRow;
     }
 	
 	public void startGameThread() {
@@ -380,7 +381,8 @@ public class GamePanel extends JPanel implements Runnable{
 
 	public void drawToScreen() {
 		Graphics g = getGraphics();
-		g.drawImage(tempScreen,  0,  0,  screenWidth2,  screenHeight2, null);
+		if(fullScreenOn == true) {g.drawImage(tempScreen,  screenWidth2/2+tileSize,  0,  screenWidth2,  screenHeight2, null);}
+		else {g.drawImage(tempScreen,  0,  0,  screenWidth2,  screenHeight2, null);}
 	}
 	//music and SFX
 	public void playMusic(int i) {
